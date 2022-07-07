@@ -1,0 +1,80 @@
+{
+  "name": "funadmin/webadmin",
+  "type": "project",
+  "keywords": [
+    "high performance",
+    "http service"
+  ],
+  "homepage": "http://www.funadmin.com",
+  "license": "MIT",
+  "description": "High performance HTTP Service Framework.",
+  "authors": [
+    {
+      "name": "funadmin",
+      "email": "994927909@qq.com",
+      "homepage": "http://www.funadmin.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "walkor@workerman.net",
+    "issues": "https://github.com/walkor/webman/issues",
+    "forum": "http://wenda.workerman.net/",
+    "wiki": "http://workerman.net/doc/webman",
+    "source": "https://github.com/walkor/webman"
+  },
+  "require": {
+    "php": ">=7.2",
+    "workerman/webman-framework": "^1.3.14",
+    "monolog/monolog": "^2.0",
+    "psr/container": "1.1.1",
+    "webman/think-orm": "^1.0",
+    "webman/think-cache": "^1.0",
+    "illuminate/redis": "^8.83",
+    "topthink/think-template": "^2.0",
+    "workerman/crontab": "^1.0",
+    "vlucas/phpdotenv": "^5.4",
+    "gregwar/captcha": "1.*",
+    "topthink/think-validate": "^2.0",
+    "intervention/image": "^2.7",
+    "tinywan/jwt": "^1.3",
+    "webman/console": "^1.0",
+    "webman/gateway-worker": "^1.0",
+    "webman/auto-route": "^1.0",
+    "webman/redis-queue": "^1.2",
+    "symfony/translation": "^5.4",
+    "doctrine/annotations": "^1.13",
+    "topthink/think-helper": "^3.1",
+    "topthink/think-image": "^1.0",
+    "webman/action-hook": "^1.0",
+    "webman/event": "^1.0"
+  },
+  "suggest": {
+    "ext-event": "For better performance. "
+  },
+  "autoload": {
+    "psr-4": {
+      "": "./",
+      "App\\": "./app"
+    },
+    "files": [
+      "./support/helpers.php",
+      "./extend/fun/helper.php",
+      "./extend/fun/form.php"
+    ],
+    "psr-0" : {
+      "": "extend/"
+    }
+  },
+  "scripts": {
+    "post-package-install": [
+      "support\\Plugin::install"
+    ],
+    "post-package-update": [
+      "support\\Plugin::install"
+    ],
+    "pre-package-uninstall": [
+      "support\\Plugin::uninstall"
+    ]
+  }
+}
