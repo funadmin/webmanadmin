@@ -1,0 +1,48 @@
+<script type="text/html" id="login_tpl">
+  <style>
+    .layui-form-label {
+      padding: 9px 0px;
+      text-align:center;
+    }
+    .layui-form-item .required::after{
+      position:unset;
+    }
+    .layui-card-header{
+      text-align: left;margin-top: 10px;
+    }
+    .layui-elem-quote{
+      padding: 5px;background: #409EFF ;
+      border-left: 5px solid #409EFF;
+      color: #fff;
+    }
+  </style>
+  <div>
+    <div class="layui-card">
+      <div class="layui-card-header" style="">
+        <blockquote class="layui-elem-quote" style="">温馨提示
+          <br>
+          此处账号为: <a class="layui-font-red" target="_blank" href="http://www.FunAdmin.com">FunAdmin云平台账号</a>
+        </blockquote>
+      </div>
+      <br>
+      <div class="layui-card-body">
+        <form class="layui-form" action="">
+          <div class="layui-form-item">
+            <label class="layui-form-label required">账号<i class="fa fa-user"></i></label>
+            <div class="layui-input-block">
+              <input type="text" class="layui-input"  lay-verify="required" id="inputUsername" value=""
+                     placeholder="{:lang('username or email')}">
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label required">密码<i class="fa fa-lock"></i></label>
+            <div class="layui-input-block">
+              <input type="password" class="layui-input"  lay-verify="required" id="inputPassword" value=""
+                     placeholder="{:lang('password')}">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</script>

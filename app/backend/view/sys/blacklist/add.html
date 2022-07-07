@@ -1,0 +1,8 @@
+{layout name="layout/main" /}
+<form class="layui-form" lay-filter="form">
+    {:form_input('ip','text',['verify'=>'required'])}
+    {:form_textarea('remark')}
+    {:form_radio('status',[0=>'close',1=>'open'],['verify'=>'required'],1)}
+    {:form_submitbtn()}
+</form>
+

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <head>
+        <meta charset="utf-8">
+        <title>FunAdmin-webman-基于webman和funadmin前台开发的高速管理系统</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="keywords" content="FunAdmin">
+        <meta name="description" content="FunAdmin">
+        <meta name="csrf-token" content="{:token()}">
+        <link rel="stylesheet" href="/static/index/css/comm.css">
+        <link rel="stylesheet" href="/static/plugins/layui/css/layui.css">
+        <script src="/static/plugins/layui/layui.js" charset="utf-8"></script>
+    </head>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        window.Config = {:json_encode($config)};
+        window.Config.formData = {:isset($formData)?(json_encode($formData)):'""'},
+        window.STATIC ='__STATIC__'
+        window.ADDONS = '__ADDONS__'
+        window.PLUGINS = '__PLUGINS__';
+    </script>
+<body>
+
+{include file="layout/header"}
+{__CONTENT__}
+{include file="layout/footer"}
+
+<script src="/static/require{:syscfg('site','app_debug')?'':'.min'}.js?v={:syscfg('site','app_debug')?time():syscfg('site','site_version')}" data-main="/static/js/require-frontend{:syscfg('site','app_debug')?'':'.min'}.js?v={:syscfg('site','app_debug')?time():syscfg('site','site_version')}" charset="utf-8"></script>
+</body>
+</html>

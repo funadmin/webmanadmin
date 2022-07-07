@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * FunAdmin
+ * ============================================================================
+ * 版权所有 2017-2028 FunAdmin，并保留所有权利。
+ * 网站地址: http://www.FunAdmin.com
+ * ----------------------------------------------------------------------------
+ * 采用最新Thinkphp6实现
+ * ============================================================================
+ * Author: yuege
+ * Date: 2017/8/2
+ */
+namespace app\backend\model;
+
+
+use think\model\concern\SoftDelete;
+
+class Member extends BackendModel {
+
+
+    /**
+     * @var bool
+     */
+    use SoftDelete;
+
+
+    
+    protected $deleteTime = 'delete_time';
+    protected $defaultSoftDelete = 0;
+
+
+    public function memberGroup(){
+        return  $this->belongsTo('MemberGroup','group_id','id');
+    }
+    public function memberLevel()
+    {
+        return $this->belongsTo('MemberLevel', 'level_id', 'id', [], 'LEFT');
+    }
+
+}
