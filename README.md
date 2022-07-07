@@ -1,9 +1,9 @@
 <BR>
 <h3 align="center"> <a href="https://www.gitee.com/funadmin/funadmin-docker">
-funadmin docker 版本请移步docker仓库 基于TP6+layui开发的技术开发框架
+funadmin docker 版本请移步docker仓库 基于TP6+layui开发的快速框架
     </a></h3>
 <h3 align="center"> <a href="https://www.gitee.com/funadmin/funadmin">
-funadmin 基于TP6+layui开发的技术开发框架
+funadmin 基于TP6+layui开发的快速框架
     </a></h3>
 <h3 align="center">为梦想而创作：funadmin-webman 基于webman开发框架系统</h3>
 

@@ -233,7 +233,7 @@ if (!function_exists('buildToken')) {
     {
         $type = is_callable($type) ? $type : 'md5';
         $token = call_user_func($type, $_SERVER['REQUEST_TIME_FLOAT']);
-        session($name, $token);
+        request()->session()->set($name, $token);
         return $token;
     }
 }
@@ -498,7 +498,7 @@ if (!function_exists('isLogin')) {
             return session('member');
         } else if (!empty($_COOKIE['mid'])) {
             $member = \app\common\model\Member::find($_COOKIE['mid']);
-            session('member', $member);
+            request()->session()->set('member', $member);
             return $member;
         } else {
             return false;
