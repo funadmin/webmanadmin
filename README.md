@@ -1,9 +1,11 @@
 <BR>
 <h3 align="center"> <a href="https://www.gitee.com/funadmin/funadmin-docker">
-funadmin docker 版本请移步docker仓库
+funadmin docker 版本请移步docker仓库 基于TP6+layui开发的技术开发框架
     </a></h3>
-
-<h3 align="center">为梦想而创作：funAdmin-webman 基于webman开发框架系统</h3>
+<h3 align="center"> <a href="https://www.gitee.com/funadmin/funadmin">
+funadmin docker 版本请移步docker仓库 基于TP6+layui开发的技术开发框架
+    </a></h3>
+<h3 align="center">为梦想而创作：funadmin-webman 基于webman开发框架系统</h3>
 
 <h4 align="center">开源不易，您可以点右上角 "Star" 支持一下 谢谢！</h4>
 <p align="center">
@@ -37,7 +39,7 @@ funadmin docker 版本请移步docker仓库
 ### QQ群2：[1048893269](https://jq.qq.com/?_wv=1027&k=2pyFqDv3)
 
 ## 项目介绍
-FunAdmin-webman 基于webman+thinkORM +Layui2.7.*+requirejs开发权限(RBAC)管理框架，框架中集成了权限管理、模块管理、插件管理、后台支持多主题切换、配置管理、会员管理等常用功能模块，以方便开发者快速构建自己的应用。框架专注于为中小企业提供最佳的行业基础后台框架解决方案，执行效率、扩展性、稳定性值得信赖，操作体验流畅，使用非常优化，欢迎大家使用及进行二次开发。
+funadmin-webman 基于webman+thinkORM +Layui2.7.*+requirejs开发权限(RBAC)管理框架，框架中集成了权限管理、模块管理、插件管理、后台支持多主题切换、配置管理、会员管理等常用功能模块，以方便开发者快速构建自己的应用。框架专注于为中小企业提供最佳的行业基础后台框架解决方案，执行效率、扩展性、稳定性值得信赖，操作体验流畅，使用非常优化，欢迎大家使用及进行二次开发。
 + PHP支持php8.0的快速开发框架 PHP>=7.2
 + 这是一个有趣的后台管理系统，这是可以让你节约时间的系统
 + 这是一款快速、高效、便捷、灵活敏捷的应用开发框架。
@@ -74,7 +76,7 @@ FunAdmin-webman 基于webman+thinkORM +Layui2.7.*+requirejs开发权限(RBAC)管
 -
 
 ## 开发者信息
-* 系统名称：FunAdmin-webadmin开发系统框架
+* 系统名称：funadmin-webadmin开发系统框架
 * 作者：FunAdmin
 * 官网网址：[http://www.funadmin.com/](http://www.funadmin.com/)
 
@@ -88,7 +90,7 @@ FunAdmin-webman 基于webman+thinkORM +Layui2.7.*+requirejs开发权限(RBAC)管
 - [Requirejs](https://requirejs.org)
 
 ## 版权信息
-funAdmin-webadmin 方便二次开发，您可以方便的使用到自己或企业的项目中,你可以免费学习或者使用
+funadmin-webadmin 方便二次开发，您可以方便的使用到自己或企业的项目中,你可以免费学习或者使用
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
