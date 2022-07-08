@@ -34,9 +34,15 @@ funadmin 基于TP6+layui开发的快速框架
 ### 如果您想获悉项目实时更新信息，您可以点右上角"Watch"
 ### 如果您想参与项目的开发，您可以点右上角"Fork"！
 ### Github：https://github.com/funadmin/webadmin
-### Github：https://github.com/funadmin/webadmin
+### Gitee：https://Gitee.com/funadmin/webadmin
 ### QQ群1：[775616363](https://jq.qq.com/?_wv=1027&k=GOakxsp6)
 ### QQ群2：[1048893269](https://jq.qq.com/?_wv=1027&k=2pyFqDv3)
+
+## 安装教程 
+ - 第一步 、进入config/thinkorm 文件修改数据库配置
+ - 第二步、windows 启动 php windows.php start 
+ - 第二步、linux php start.php start
+ - 第三步、访问域名 127.0.0.1：8787 即可以进入安装程序
 
 ## 项目介绍
 funadmin-webman 基于webman+thinkORM +Layui2.7.*+requirejs开发权限(RBAC)管理框架，框架中集成了权限管理、模块管理、插件管理、后台支持多主题切换、配置管理、会员管理等常用功能模块，以方便开发者快速构建自己的应用。框架专注于为中小企业提供最佳的行业基础后台框架解决方案，执行效率、扩展性、稳定性值得信赖，操作体验流畅，使用非常优化，欢迎大家使用及进行二次开发。
