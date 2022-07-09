@@ -218,7 +218,8 @@ class AuthService
     public function authNode($url)
     {
         $cfg = config('funadmin.backend');
-        list($app,$controller,$action,$route,$url) = getNodeInfo();
+        if(strpos($url,'/'.request()->app.'/')===false) $url = request()->app.'/'.trim($url,'/');
+        list($app,$controller,$action,$route,$url_now) = getNodeInfo();
         $adminId = session('admin.id');
         // 判断权限验证开关
         if (isset($cfg['auth_on']) && $cfg['auth_on'] == false) {

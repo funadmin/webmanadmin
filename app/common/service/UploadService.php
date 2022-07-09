@@ -118,7 +118,7 @@ class UploadService extends AbstractService
                                 'name'          => $file_name,
                                 'path'          => $path,
                                 'thumb'         => $path,
-                                'url'           => $this->driver == 'local' ? request()->domain . $path : $path,
+                                'url'           => $this->driver == 'local' ? (isHttps()?'https:://':'http://' ). request()->host() . $path : $path,
                                 'ext'           => $file_ext,
                                 'size'          => $file_size / 1024,
                                 'width'         => $width,
@@ -208,7 +208,7 @@ class UploadService extends AbstractService
                             'name'          => $file_name,
                             'path'          => $path,
                             'thumb'         => $path,
-                            'url'           => $this->driver == 'local' ? request()->domain . $path : $path,
+                            'url'           => $this->driver == 'local' ? (isHttps()?'https:://':'http://' ). request()->host() . $path : $path,
                             'ext'           => $file_ext,
                             'size'          => $file_size / 1024,
                             'width'         => $width,
@@ -300,7 +300,7 @@ class UploadService extends AbstractService
         // 读取图片
         $water = syscfg('upload');
         if($water['upload_water']){
-            $domain = request()->domain();
+            $domain = request()->host();
             $path = '.'. "/" .trim($path,"/");
             $image = Image::open($path);
             // 添加水印

@@ -41,11 +41,11 @@
         </tr>
         <tr>
             <td>php版本</td>
-            <td>7.4+</td>
+            <td>7.2+</td>
             <td><?php echo PHP_VERSION ?></td>
             <?php $php_version=explode('.', PHP_VERSION);?>
             <td>
-                <?php if(version_compare(PHP_VERSION, '7.4.0', '>')): ?>
+                <?php if(version_compare(PHP_VERSION, '7.2.0', '>')): ?>
                 <i class="layui-icon layui-icon-ok"></i>
                 <?php else: ?>
                 <i class="layui-icon layui-icon-close"></i>
@@ -232,24 +232,6 @@
             </td>
         </tr>
         <tr>
-            <td>Fileinfo</td>
-            <td>支持</td>
-            <td>
-                <?php if(extension_loaded('fileinfo')): ?>
-                支持
-                <?php else: ?>
-                不支持
-                <?php endif; ?>
-            </td>
-            <td>
-                <?php if(extension_loaded('fileinfo')): ?>
-                <i class="layui-icon layui-icon-ok"></i>
-                <?php else: ?>
-                <i class="layui-icon layui-icon-close"></i>
-                <?php endif; ?>
-            </td>
-        </tr>
-        <tr>
             <td>上传限制</td>
             <td>10M+</td>
             <td><?php echo get_cfg_var('upload_max_filesize'); ?></td>
@@ -302,7 +284,12 @@
         // 判断是否通过
         $(document).on("click",'.next',function(){
             // 判断检测是否达标
-            if($('.layui-icon-ok').length < 13){
+            if ("{:file_exists($config['lockFile'])}")
+            {
+                layer.msg('已经安装了,如果需要重新安装请先删除public/install.lock');
+                return false;
+            }
+            if($('.layui-icon-ok').length < 12){
                 msg = msg?msg:'您的配置或权限未满足要求';
                 layer.msg(msg);
             }else{

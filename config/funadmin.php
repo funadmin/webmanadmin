@@ -22,5 +22,6 @@ return [
     ],
     'auth_on'=>true,
     'version'=>'1.0',
+    'layui_version' => '2.7.2'
 ]
 ;

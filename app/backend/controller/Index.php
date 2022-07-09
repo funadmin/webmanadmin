@@ -54,17 +54,17 @@ class Index extends Controller
         $main_config = Cache::get('main_config');
         if (!$main_config) {
             $config = [
-//                'url' => $_SERVER['HTTP_HOST'],
-//                'document_root' => $_SERVER['DOCUMENT_ROOT'],
-//                'document_protocol' => $_SERVER['SERVER_PROTOCOL'],
-//                'server_os' => PHP_OS,
-//                'server_port' => $_SERVER['SERVER_PORT'],
-//                'server_ip' => $_SERVER['REMOTE_ADDR'],
-//                'server_soft' => $_SERVER['SERVER_SOFTWARE'],
-//                'server_file' => $_SERVER['SCRIPT_FILENAME'],
-//                'php_version' => PHP_VERSION,
-//                'mysql_version' => $version[0]['ver'],
-//                'max_upload_size' => ini_get('upload_max_filesize'),
+                'url' => request()->url(),
+                'document_root' => public_path(),
+                'document_protocol' => base_path(),
+                'server_os' => PHP_OS,
+                'server_port' =>request()->getLocalPort(),
+                'server_ip' =>  request()->getLocalIp(),
+                'server_soft' => PHP_SAPI,
+                'server_file' => $_SERVER['SCRIPT_FILENAME'],
+                'php_version' => PHP_VERSION,
+                'mysql_version' => $version[0]['ver'],
+                'max_upload_size' => ini_get('upload_max_filesize'),
             ];
             Cache::set('main_config', $config, 3600);
         }

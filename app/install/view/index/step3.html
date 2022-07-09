@@ -136,6 +136,11 @@
         var layer = layui.layer,$ = layui.$,form=layui.form;
         //监听提交
         form.on('submit(submit)', function(data){
+            if ("{:file_exists($config['lockFile'])}")
+            {
+                layer.msg('已经安装了,如果需要重新安装请先删除public/install.lock');
+                return false;
+            }
             var that = $(this);
             var load = layer.load();
             $('#layui-error').addClass('layui-hide')

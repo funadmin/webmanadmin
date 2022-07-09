@@ -27,8 +27,8 @@ class Login extends Controller {
             $admin= session('admin');
             $admin_sign= session('admin.token') == SignHelper::authSign($admin) ? $admin['id'] : 0;
             // 签名验证是否存在
-            if ($admin && $admin_sign) {
-                redirect('index/index');
+            if ($admin) {
+                redirect(url('index/index'));
             }
             $bg = '/static/backend/images/admin-bg.jpg';
             $view = ['bg'=>$bg];

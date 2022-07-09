@@ -7,10 +7,9 @@
 </head>
 <body>
 <div class="layui-container">
-
     <h1 class="install-h1">FunAdmin 开始安装</h1>
     <?php if(is_file($config['lockFile'])):?>
-    <div class="layui-error">
+    <div id="layui-error">
         当前已经安装FunAdmin，如果需要重新安装，请手动移除FunAdmin/public/install.lock文件
     </div>
     <?php endif;?>
@@ -66,9 +65,13 @@
 <script>
     layui.use('layer',function(){
         layer = layui.layer;$ = layui.$;
-        $(document).on("click",'.agree',function(){
+        $(document).on("click",'.agree',function() {
             _that = $(this);
-            if("{$config['lockFile']}") return false;
+            if ("{:file_exists($config['lockFile'])}")
+            {
+                layer.msg('已经安装了,如果需要重新安装请先删除public/install.lock');
+                return false;
+            }
             window.location.href =  _that.data('href');
         })
     })

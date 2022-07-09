@@ -78,7 +78,7 @@ class Upgrade extends Controller
             'server_os' => PHP_OS,
             'server_port' =>request()->getLocalPort(),
             'server_ip' =>  request()->getLocalIp(),
-            'server_soft' => $_SERVER['OS'],
+            'server_soft' => PHP_SAPI,
             'server_file' => $_SERVER['SCRIPT_FILENAME'],
             'php_version' => PHP_VERSION,
             'mysql_version' => $version[0]['ver'],
@@ -100,7 +100,7 @@ class Upgrade extends Controller
         }
         $params = [
             "ip" => request()->getRealIp(),
-            "domain" => request()->domain(),
+            "domain" => request()->host(),
             "version" => $this->now_version,
         ];
         $result = $this->authCloudService->setApiUrl('api/v1.version/getVersion')

@@ -1,0 +1,12 @@
+{
+  "name": "webman/auto-route",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Webman\\AutoRoute\\": "src"
+    }
+  }
+}

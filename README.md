@@ -38,6 +38,7 @@ funadmin 基于TP6+layui开发的快速框架
 ### QQ群1：[775616363](https://jq.qq.com/?_wv=1027&k=GOakxsp6)
 ### QQ群2：[1048893269](https://jq.qq.com/?_wv=1027&k=2pyFqDv3)
 
+### 演示地址 http://webman.funadmin.com/backend  账号密码 admin 123456 
 ## 安装教程 
  - 第一步 、进入config/thinkorm 文件修改数据库配置
  - 第二步、windows 启动 php windows.php start 

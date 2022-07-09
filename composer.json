@@ -6,7 +6,7 @@
     "http service"
   ],
   "homepage": "http://www.funadmin.com",
-  "license": "MIT",
+  "license": "apache-2.0",
   "description": "High performance HTTP Service Framework.",
   "authors": [
     {
@@ -54,6 +54,7 @@
   },
   "autoload": {
     "psr-4": {
+      "Foo\\Admin\\" : "vendor/foo/admin/src",
       "": "./",
       "App\\": "./app"
     },

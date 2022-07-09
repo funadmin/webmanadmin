@@ -15,6 +15,18 @@ use think\facade\Cache;
 use think\facade\Db;
 use think\Template;
 
+if (!function_exists('hook')) {
+
+    /**
+     * @param $event
+     * @param $params
+     * @return mixed
+     */
+    function hook($event, $params = null)
+    {
+        return  \Webman\Event\Event::emit($event, $params);
+    }
+}
 if (!function_exists('captcha_check')) {
     function captcha_check($captcha)
     {
@@ -182,7 +194,6 @@ if (!function_exists('parse_name')) {
     }
 }
 
-
 if (!function_exists('token')) {
     /**
      * 获取Token令牌
@@ -226,7 +237,6 @@ if (!function_exists('token_meta')) {
     }
 }
 
-
 if (!function_exists('buildToken')) {
 
     function buildToken(string $name = '__token__', $type = 'md5')
@@ -237,6 +247,7 @@ if (!function_exists('buildToken')) {
         return $token;
     }
 }
+
 if (!function_exists('syscfg')) {
     /**
      * @param $group

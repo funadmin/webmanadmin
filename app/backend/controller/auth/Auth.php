@@ -41,11 +41,11 @@ class Auth extends Controller
 
     /**
      * @NodeAnnotation(title="权限列表")
-     * @return array|\support\View
+     * @return \Response|\support\Response
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
-     *
      */
     public function index()
     {
@@ -88,7 +88,7 @@ class Auth extends Controller
                 return $this->error(lang('sort') . lang(' cannot null'));
             }
             $post['icon'] = $post['icon'] ? 'layui-icon '.$post['icon'] : 'layui-icon layui-icon-diamond';
-            $post['href'] = trim($post['href'], '/');
+            $post['href'] = '/'.trim($post['href'], '/');
             $rule = [
                 'href'=>'require|unique:auth_rule',
                 'title'=>'require'
@@ -117,10 +117,8 @@ class Auth extends Controller
 
     /**
      * @NodeAnnotation(title="修改")
-     * @return \think\response\View
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @return \Response|\support\Response|void
+     *
      */
     public function edit()
     {
@@ -154,10 +152,8 @@ class Auth extends Controller
 
     /**
      * @NodeAnnotation(title="子权限添加")
-     * @return \think\response\View
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @return \Response|\support\Response|void
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function child()
     {

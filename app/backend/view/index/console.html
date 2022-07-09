@@ -68,30 +68,30 @@
             <div class="layui-col-sm6" style="padding-bottom: 0;">
                 <div class="layui-row layui-col-space15">
                     <div class="layui-col-xs6 layui-col-sm3">
-                        <div class="console-app-group" title="用户" lay-id="{:__u('member.member/index')}" data-iframe
-                             data-url="{:__u('member.member/index')}">
+                        <div class="console-app-group" title="用户" lay-id="{:__u('member/member/index')}" data-iframe
+                             data-url="{:__u('member/member/index')}">
                             <i class="console-app-icon layui-icon layui-icon-group"
                                style="font-size: 26px;padding-top: 3px;margin-right: 6px;"></i>
                             <div class="console-app-name">用户</div>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm3">
-                        <div class="console-app-group" title="分析" lay-id="{:__u('member.member/index')}" data-iframe
-                             data-url="{:__u('member.member/index')}">
+                        <div class="console-app-group" title="分析" lay-id="{:__u('member/member/index')}" data-iframe
+                             data-url="{:__u('member/member/index')}">
                             <i class="console-app-icon layui-icon layui-icon-chart" style="color: #95de64;"></i>
                             <div class="console-app-name">分析</div>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm3">
-                        <div class="console-app-group" title="商品" lay-id="{:__u('member.member/index')}" data-iframe
-                             data-url="{:__u('member.member/index')}">
+                        <div class="console-app-group" title="商品" lay-id="{:__u('member/member/index')}" data-iframe
+                             data-url="{:__u('member/member/index')}">
                             <i class="console-app-icon layui-icon layui-icon-cart" style="color: #ff9c6e;"></i>
                             <div class="console-app-name">商品</div>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm3">
-                        <div class="console-app-group" title="订单" lay-id="{:__u('member.member/index')}" dat-iframe
-                             data-url="{:__u('member.member/index')}">
+                        <div class="console-app-group" title="订单" lay-id="{:__u('member/member/index')}" dat-iframe
+                             data-url="{:__u('member/member/index')}">
                             <i class="console-app-icon layui-icon layui-icon-form"
                                style="color: #b37feb;font-size: 30px;"></i>
                             <div class="console-app-name">订单</div>
@@ -458,20 +458,20 @@
                             <tbody>
                             <tr>
                                 <td>当前版本</td>
-                                <td>v{:config('app.version')}   <a href="https://gitee.com/funadmin/funadmin"
-                                                                   target="_blank">更新日志</a></td>
+                                <td>v{:config('funadmin.version')}   <a href="https://gitee.com/funadmin/webadmin"
+                                                                        target="_blank">更新日志</a></td>
                             </tr>
                             <tr>
                                 <td>基于框架</td>
-                                <td>thinkphp6</td>
+                                <td>webman+funadmin</td>
                             </tr>
                             <tr>
                                 <td>webman版本</td>
                                 <td>{:getVersion()}</td>
                             </tr>
                             <tr>
-                                <td>基于</td>
-                                <td>layui-v2.6.11</td>
+                                <td>基于layui</td>
+                                <td>{:config('funadmin.layui_version')}</td>
                             </tr>
                             <tr>
                                 <td>基于</td>
@@ -488,8 +488,11 @@
                             <tr>
                                 <td>获取渠道</td>
                                 <td>
+                                    <a href="https://gitee.com/funadmin/webadmin" target="_blank"
+                                       class="layui-btn layui-btn-warm">webadmin立即下载</a>
+                                    <br><br>
                                     <a href="https://gitee.com/funadmin/funadmin" target="_blank"
-                                       class="layui-btn">立即下载</a>
+                                       class="layui-btn layui-btn-normal">funadmin立即下载</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -502,48 +505,26 @@
                     <div class="layui-card-body">
                         <dl class="layui-card-status">
                             <dd>
-                                <div class="layui-status-img"><a href="javascript:;"><img
-                                        src="http://www.funadmin.com/static/addons/bbs/images/avatar/5.jpg"></a></div>
+                                <div class="layui-status-img"><a href="javascript:;">
+                                    <!--<img src="http://www.funadmin.com/static/addons/bbs/images/avatar/5.jpg">-->
+                                </a>
+                                </div>
                                 <div>
                                     <p>胡歌 在 <a lay-href="http://www.FunAdmin.com">FunAdmin专区</a> 回答问题</p>
                                     <span>几秒前</span>
                                 </div>
                             </dd>
                             <dd>
-                                <div class="layui-status-img"><a href="javascript:;"><img
-                                        src="http://www.funadmin.com/static/addons/bbs/images/avatar/5.jpg"></a></div>
+                                <div class="layui-status-img"><a href="javascript:;">
+                                    <!--<img src="http://www.funadmin.com/static/addons/bbs/images/avatar/5.jpg">-->
+                                </a></div>
                                 <div>
                                     <p>彭于晏 在 <a lay-href="http://www.Funadmin.com">FunAdmin专区</a> 进行了 <a
                                             lay-href="http://www.FunAdmin.comcolumn/quiz/">提问</a></p>
                                     <span>2天前</span>
                                 </div>
                             </dd>
-                            <dd>
-                                <div class="layui-status-img"><a href="javascript:;"><img
-                                        src="http://www.funadmin.com/static/addons/bbs/images/avatar/5.jpg"></a></div>
-                                <div>
-                                    <p>Fun 将 <a lay-href="http://www.layui.com/">layui</a> 更新至 2.6.8 版本</p>
-                                    <span>7天前</span>
-                                </div>
-                            </dd>
-                            <dd>
-                                <div class="layui-status-img"><a href="javascript:;"><img
-                                        src="http://www.funadmin.com/static/addons/bbs/images/avatar/5.jpg"></a></div>
-                                <div>
-                                    <p>吴尊 在 <a lay-href="http://fly.layui.com/">funadmin社区</a> 发布了 <a
-                                            lay-href="http://fly.layui.com/column/suggest/">建议</a></p>
-                                    <span>7天前</span>
-                                </div>
-                            </dd>
-                            <dd>
-                                <div class="layui-status-img"><a href="javascript:;"><img
-                                        src="http://www.funadmin.com/static/addons/bbs/images/avatar/5.jpg"></a></div>
-                                <div>
-                                    <p>许上进 在 <a lay-href="http://fly.layui.com/">funadmin社区</a> 发布了 <a
-                                            lay-href="http://fly.layui.com/column/suggest/">建议</a></p>
-                                    <span>8天前</span>
-                                </div>
-                            </dd>
+
                         </dl>
                     </div>
                 </div>

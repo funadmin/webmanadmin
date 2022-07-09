@@ -54,10 +54,7 @@ class AuthGroup extends Controller
 
     /**
      * @NodeAnnotation(title="添加")
-     * @return \think\response\View
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @return \Response|\support\Response|void
      */
     public function add()
     {

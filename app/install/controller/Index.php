@@ -5,7 +5,6 @@ namespace app\install\controller;
 use app\common\controller\Controller;
 use support\Request;
 use support\View;
-use think\db\builder\Mysql;
 
 class Index extends Controller
 {
@@ -171,21 +170,21 @@ return [
             // 数据库类型
             'type' => 'mysql',
             // 服务器地址
-            'hostname' => getenv('DB_HOST','{$host}'),
+            'hostname' => getenv('DB_HOST')?:'{$host}',
             // 数据库名
-            'database' => getenv('DB_NAME','{$mysqlDatabase}'),
+            'database' => getenv('DB_NAME')?:'{$mysqlDatabase}',
             // 数据库用户名
-            'username' =>getenv('DB_USER','{$mysqlUserName}'),
+            'username' =>getenv('DB_USER')?:'{$mysqlUserName}',
             // 数据库密码
-            'password' => getenv('DB_PASSWORD','{$mysqlPassword}'),
+            'password' => getenv('DB_PASSWORD')?:'{$mysqlPassword}',
             // 数据库连接端口
-            'hostport' => getenv('DB_PORT','{$port}'),
+            'hostport' => getenv('DB_PORT')?:'{$port}',
             // 数据库连接参数
             'params' => [],
             // 数据库编码默认采用utf8
             'charset' => 'utf8mb4',
             // 数据库表前缀
-            'prefix' =>  getenv('DB_PREFIX','{$mysqlPreFix}'),
+            'prefix' =>  getenv('DB_PREFIX')?:'{$mysqlPreFix}',
             // 断线重连
             'break_reconnect' => true,
             // 关闭SQL监听日志
