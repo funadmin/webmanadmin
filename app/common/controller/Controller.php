@@ -17,12 +17,14 @@ use Webman\View;
 
 class Controller
 {
-    use Curd;
-    use Jump;
+    use Curd,Jump;
 
     protected $app;
+
     protected $controller;
+
     protected $action;
+
     protected $route;
     /**
      * 是否批量验证
@@ -82,16 +84,13 @@ class Controller
     protected $request;
 
     /**
-     * 该方法会在请求后调用
+     * selectpage 字段
+     * @var string[]
      */
-    public function afterAction(Request $request)
-    {
+    protected $selectpageFields = ['*'];
 
-        // 如果想串改请求结果，可以直接返回一个新的Response对象
-        // return response('afterAction');
-    }
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
         list($this->app,$this->controller,$this->action,$this->route,$this->url) = getNodeInfo();
         //过滤参数
@@ -172,7 +171,7 @@ class Controller
         return loadLang($name);
     }
 
-    public function verify(Request $request)
+    public function verify()
     {
         // 初始化验证码类
         $builder = new CaptchaBuilder;

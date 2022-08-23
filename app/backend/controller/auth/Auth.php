@@ -13,6 +13,7 @@
 
 namespace app\backend\controller\auth;
 
+use app\backend\service\AuthService;
 use app\common\controller\Controller;
 use app\backend\model\AuthRule;
 use fun\helper\TreeHelper;
@@ -31,9 +32,9 @@ class Auth extends Controller
 {
 
     public $uid;
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new AuthRule();
         $this->uid  =session('admin.id');
     }
@@ -125,7 +126,11 @@ class Auth extends Controller
         if (request()->isAjax()) {
             $post = request()->all();
             $post['icon'] = $post['icon'] ? 'layui-icon '.$post['icon'] : 'layui-icon layui-icon-diamond';
-            $model = $this->findModel(request()->all('id'));
+            $id = $this->request->param('id');
+            $model = $this->findModel($id);
+            if($post['pid'] && $post['pid'] == $id)  $this->error(lang('The superior cannot be set as himself'));
+            $childIds = array_filter(explode(',',(new AuthService())->getAllIdsBypid($id)));
+            if($childIds && in_array($post['pid'],$childIds)) $this->error(lang('Parent menu cannot be modified to submenu'));
             if ($model->save($post)) {
                 Cache::clear();
                 return $this->success(lang('operation success'));

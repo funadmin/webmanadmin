@@ -34,11 +34,7 @@ class AbstractService
 
     protected $config= [] ;
 
-    public function beforeAction(Request $request){
-
-    }
-
-    /**
+        /**
      * @param $config
      */
     public function __construct($config=[])

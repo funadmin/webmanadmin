@@ -9,12 +9,8 @@
 // |  后台总控制API
 
 define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
-    var layer = layui.layer, element = layui.element;
-    layer = layer || parent.layer;
-    layui.layer.config({
-        skin: 'fun-layer-class'
-    });
-    Toastr = parent.Toastr || Toastr;
+    var layer = layui.layer, element = layui.element;layer = layer || parent.layer;
+    layui.layer.config({skin: 'fun-layer-class'});Toastr = parent.Toastr || Toastr;
     var Fun = {
         url: function (url) {
             var domain = window.location.host;
@@ -37,13 +33,13 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                 url = url.indexOf('{ids}') !== -1 ? url.replace('{ids}', d.id) : url;
             }
             return url;
-
         },
         checkAuth: function (node,ele) {
             // 超管，全部权限
             if (Config.superAdmin === true) {
                 return true;
             }
+            if(node.indexOf('?')>=0) node = node.replace(/(\?|#)[^'"]*/, '');           //去除参数
             return $(ele).data('node-' + node.toLowerCase()) === 1;
         },
         param: function (param, defaultParam) {
@@ -193,7 +189,7 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                                 val[i] = v.slice(0, 1).toLowerCase() + v.slice(1);
                             });
                             val = val.join(".");
-                            arrayNode[key] = val;
+                            arrayNode[key] = Fun.common.camel(val);
                         }
                     });
                     node = arrayNode.join("/");
@@ -233,29 +229,29 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
             // duration: 2000, //默认2秒关闭
             // showClose: true //显示关闭按钮
             // 成功消息
-            success: function (msg, callback,duration=2500,position='topCenter',showClose=true) {
+            success: function (msg, callback,duration=2000,position='topCenter',showClose=true) {
                 return Toastr.success(msg,callback,duration,position,showClose);
             },
             // 失败消息
-            error: function (msg, callback,duration=2500,position='topCenter',showClose=true) {
+            error: function (msg, callback,duration=2000,position='topCenter',showClose=true) {
                 return Toastr.error(msg,callback,duration,position,showClose);
             },
-            info:function(msg, callback,duration=2500,position='topCenter',showClose=true) {
+            info:function(msg, callback,duration=2000,position='topCenter',showClose=true) {
                 return Toastr.info(msg,callback,duration,position,showClose);
             },
-            warning:function(msg, callback,duration=2500,position='topCenter',showClose=true) {
+            warning:function(msg, callback,duration=2000,position='topCenter',showClose=true) {
                 return Toastr.warning(msg,callback,duration,position,showClose);
             },
             // 警告消息框
-            alert: function (msg, callback,duration=2500,position='topCenter',showClose=true) {
+            alert: function (msg, callback,duration=2000,position='topCenter',showClose=true) {
                 return Toastr.warning(msg,callback,duration,position,showClose);
             },
             // 消息提示
-            tips: function (msg, callback,duration=2500,position='topCenter',showClose=true) {
+            tips: function (msg, callback,duration=2000,position='topCenter',showClose=true) {
                 return Toastr.info(msg,callback,duration,position,showClose);
             },
             // 加载中提示
-            loading: function (msg, callback,duration=2500,position='topCenter',showClose=true) {
+            loading: function (msg, callback,duration=2000,position='topCenter',showClose=true) {
                 return Toastr.loading(msg,callback,duration,position,showClose);
             },
             // 对话框
@@ -310,7 +306,7 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                     url: data.url ? data.url : data.href,
                     width: data.width,
                     height: data.height,
-                    isResize: data.title,
+                    isResize: data.resize,
                     full: data.full,
                     btn: data.btn,
                     btnAlign: data.btnAlign,
@@ -329,17 +325,17 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                 Fun.api.iframe(options)
             },
             request: function (othis, options = null,Table='') {
-                var data = othis.data();
+                var data = othis.data(),value;
                 if (options) {
                     title = options.title;
                     url = options.url;
                     tableId = options.tableId || Table.init.tableId
                 } else {
                     var title = data.confirm ||  othis.prop('confirm') ||  othis.prop('text') || data.text || othis.prop('title') || data.title  , url = data.url ? data.url : data.href,
-                        tableId = data.tableId;
-                    title = title || 'Are you sure';
+                        tableId = data.tableid;
+                    title = title || 'Are you sure to do this';
                     url = url !== undefined ? url : window.location.href;
-                    tableId = tableId || Table.init.tableId
+                    tableId = tableId || Table.init.tableId, value = data.value;
                 }
                 ids = '';
                 if(Table){
@@ -347,8 +343,9 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                     ids = arr[0];
                     length = arr[1];
                 }
+                postdata = {ids:ids};if(value){postdata.value = value}
                 Fun.toastr.confirm(__(title), function () {
-                    Fun.ajax({url: url, data: {ids: ids},}, function (res) {
+                    Fun.ajax({url: url, data: postdata}, function (res) {
                         Fun.toastr.success(res.msg, function () {
                             try {
                                 if(layui.treeGrid && layui.treeGrid.getDataList(tableId).length>0){
@@ -391,13 +388,18 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                         if(Fun.checkAuth(url)){
                             extend[k].url =url;
                             extend[k].class =v.class || 'layui-btn-xs layui-btn-normal';
-                            extend[k].id = v.event
+                            extend[k].id = v.id || v.event
                             extend[k].callback = v.callback || '';
                             extend[k].extend = v.extend || '';
+                            extend[k].type = v.type || 'normal';
+                            extend[k].target = v.target || '_self';
+                            extend[k].child = v.child || [];
                             extend[k].textTitle = v.title
                             extend[k].icon = v.icon || '';
+                            extend[k].field = v.field || '';
+                            extend[k].value = v.value || '';
                             icon = extend[k].icon ? '<i class="{{d.icon}}"></i>':'';
-                            extend[k].templet = v.templet ||  "<button lay-event='{{d.event}}'"+ 'data-url="{{d.url}}" class="layui-btn {{d.class}}" title="{{d.title}}">' +icon+' {{d.title}}  </button>';
+                            extend[k].templet = v.templet ||  "<button data-value='{{d.value}}' data-field='{{d.field}}' data-id='{{d.id}}' lay-event='{{d.event}}' data-url='{{d.url}}' class='layui-btn layui-btn-normal {{d.class}}' title='{{d.title}}'>" +icon+' {{d.title}}  </button>';
                             extend[k].title =v.title ;
                         }
                     })
@@ -441,6 +443,7 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                     return false
                 }
             },
+
             //设置子页面主题
             setFrameTheme:function(body=''){
                 var colorId = Fun.api.getStorage('funColorId');
@@ -469,14 +472,7 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                 }
                 top.layui.$('body').attr('id',theme);
             },
-            /**
-             * 关闭当前弹窗
-             */
-            close:function(index,type=0){
-                index =  index === undefined? parent.layer.getFrameIndex(window.name):index;
-                type === 1? parent.layer.closeAll(): parent.layer.close(index)
-                return true;
-            },
+
             /**
              * 检测屏幕是否手机
              * @returns {boolean}
@@ -500,14 +496,15 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
             open: function (options) {
                 var title = options.title, url = options.url, width = options.width,
                     height = options.height, success = options.success,
-                    yes = options.yes, btn2 = options.btn2, type = options.type;
+                    cancel = options.cancel;end=options.end;
+                yes = options.yes, btn2 = options.btn2, type = options.type;
                 type = type === undefined || type===2  ? 2 : 1;
-                isResize = options.isResize === undefined;
-                isFull = !!options.full;url = type===2?Fun.url(url):url;
+                var isResize = options.isResize === undefined;
+                var isFull = !!options.full;url = type===2?Fun.url(url):url;
                 isResize = isResize === false ? true : isResize;
                 width = width || '800';height = height || '600';
-                winHeight = $(document).height()+110 ;height = height>winHeight?winHeight:height;
-                width = width + 'px';height = height + 'px';
+                width = $(window).width()+20 >= width ? width + 'px' :'95%';
+                height = ($(window).height()+110)>=height?height + 'px' :'95%';
                 if (isFull) {width = '100%';height = '100%';}
                 var btns = [];
                 if (options.btn === undefined) {
@@ -524,21 +521,23 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                         btns.push(v);
                     })
                 }
+
                 if (options.btnAlign === undefined) {
                     options.btnAlign = 'c';
                 }
                 if (options.btn_lang === []) options.btn_lang = false;
                 var parentiframe = Fun.api.checkLayerIframe();
-                options = {
+                options = $.extend({
                     title: title, type: type, area: [width, height], content: url,
                     shadeClose: true, anim: 0, shade: 0.1, isOutAnim: true,
-                    // zIndex: layer.zIndex, //
+                    zIndex: parent.layui.layer.zIndex, //
                     maxmin: true, moveOut: true, resize: isResize, scrollbar: true,
                     btnAlign: options.btnAlign, btn: options.btn_lang,
                     success: success === undefined ? function (layero) {
                         try {
                             // 置顶当前窗口
                             parent.layui.layer.setTop(layero);
+                            parent.layui.layer.iframeAuto(index) //- 指定iframe层自适应
                             // 将保存按钮改变成提交按钮
                             layero.addClass('layui-form');
                             layero.find('.layui-layer-btn.layui-layer-btn-c').css('background', '#f3f6f6');
@@ -550,8 +549,11 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                         }
                     } : success,
                     yes: yes === undefined ? function (index, layero) {
+                        console.log(options.btn.length)
+                        console.log(btns[0])
                         try {
-                            if(options.btn.length==1){layer.close(index);return false;}
+                            //此处必须是close才直接关闭
+                            if(btns.length==1 && btns[0]=='close'){layer.close(index);return false;}
                             $(document).ready(function () {// 父页面获取子页面的iframe
                                 var body = layer.getChildFrame('body', index);
                                 if (parentiframe) {body = parent.layer.getChildFrame('body', index);}
@@ -563,26 +565,63 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                         }
                         return false;
                     } : yes,
-                    btn2: btn2 === undefined ? function (index) {
+                    cancel: cancel === undefined? function (index, layero) {
                         layer.close(layer.index);
-                    } : btn2,
-                    cancel: function (index, layero) {
+                    }:cancel,
+                    end:end === undefined?function(index, layero){
                         layer.close(layer.index);
-                    },end:function(index, layero){
-                        layer.close(layer.index);
+                    }:end
+                }, options ? options : {})
+                //增加多个按钮
+                if(btns.length>1){
+                    for (i=1;i<btns.length;i++) {
+                        if(i==btns.length-1){
+                            options['btn'+(i+1)] =  function (index, layero) {
+                                layer.close(layer.index);
+                            };
+                        }else{
+                            try {
+                                var func = btns[i];
+                                options['btn'+(i+1)] = options['btn'+(i+1)] || eval(func);
+                            } catch(e) {
+                                console.log('function '+ func + ' not exists');
+                            }
+                        }
                     }
                 }
                 var index =  parentiframe? parent.layer.open(options): layer.open(options);
                 if (Fun.api.checkScreen() || width === undefined || height === undefined) {
-                    layer.full(index);
+                    layui.layer.full(index);
                 }
                 if (isFull) {
-                    layer.full(index);
+                    layui.layer.full(index);
                 }
                 if (isResize) {
                     $(window).on("resize", function () {
-                        layer.full(index);
+                        layui.layer.full(index);
                     })
+                }
+            },
+            /**
+             * 关闭当前弹窗
+             */
+            close:function(index,type=0){
+                index =  index === undefined? parent.layer.getFrameIndex(window.name):index;
+                type === 1? parent.layer.closeAll(): parent.layer.close(index)
+                return true;
+            },
+            /**
+             * 关闭窗口并回传数据
+             * @param data
+             */
+            closecallback: function(data) {
+                var index = parent.layui.layer.getFrameIndex(window.name);
+                var callback = parent.$("#layui-layer" + index).data("callback");
+                //再执行关闭
+                parent.layui.layer.close(index);
+                //再调用回传函数
+                if (typeof callback === 'function') {
+                    callback.call(undefined, data);
                 }
             },
             //打开iframe
@@ -626,7 +665,18 @@ define(["jquery", "lang",'toastr','dayjs'], function ($, Lang,Toastr,Dayjs) {
                     return false;
                 })
                 return returnData;
-            }
+            },
+            callback:function (othis){
+                callback = othis.data('callback');
+                if (callback) {
+                    callback = callback.replace('obj','othis').replace('_that','othis');
+                    callback = callback.indexOf('(') !== -1 ? callback : callback + '(othis)';
+                    callback = callback.indexOf('othis') !== -1 ? callback : callback.replace('(','(othis,');
+                    eval(callback);
+                    return true;
+                }
+                return true;
+            },
         },
     };
     //初始化

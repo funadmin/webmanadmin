@@ -40,9 +40,9 @@ class Upgrade extends Controller
     protected $lockFile;
     protected $now_version;
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->backup_dir = '../../backup/';
         $this->now_version = config('funadmin.version');
         $this->lockFile = '../../backup/'.$this->now_version.'.lock';

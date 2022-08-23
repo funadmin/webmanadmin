@@ -8,9 +8,9 @@ use support\Request;
 class OssService extends AbstractService
 {
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
     }
     /**
      * @param $driver 驱动

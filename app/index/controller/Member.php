@@ -21,9 +21,9 @@ use think\facade\Db;
 use support\View;
 class Member extends Base {
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new \app\common\model\Member();
         View::assign(['member'=>session('member'),'action'=>$this->action]);
     }
@@ -90,8 +90,8 @@ class Member extends Base {
             return $this->success(lang('modified Successfully'));
 
         }
-        $province = $this->getProvinces(0);
-        View::assign('province',$province);
+        $list = Db::name('provinces')->where('pid',0)->cache(true)->select();
+        View::assign('province',$list);
         return fetch('set');
     }
     //修改密码
@@ -119,7 +119,7 @@ class Member extends Base {
     public function getProvinces($pid=0){
         $pid = request()->input('pid')?request()->input('pid'):$pid;
         $list = Db::name('provinces')->where('pid',$pid)->cache(true)->select();
-        return $list;
+        return $this->success(lang('ok'),'',$list);
     }
 
     /**

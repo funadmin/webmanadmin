@@ -18,8 +18,8 @@
       </ul>
       <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
         <div class="layui-tab-item layui-show">
-<!--          {if cookie('code') && cookie('email')}-->
-<!--          <div class="fly-msg">{:cookie('username')}，打开邮箱,获取验证码,注册并激活您的邮箱，<a href="{:__u('login/reg',['type'=>1])}"> 没收到邮件？点击重新注册</a></div>-->
+<!--          {if request()->cookie('code') && request()->cookie('email')}-->
+<!--          <div class="fly-msg">{:request()->cookie('username')}，打开邮箱,获取验证码,注册并激活您的邮箱，<a href="{:__u('login/reg',['type'=>1])}"> 没收到邮件？点击重新注册</a></div>-->
 <!--          <div class="layui-form"  style="margin-top: 30px;">-->
 <!--            <form action="{:__u('login/regActive')}" method="post">-->
 <!--              <div class="layui-form-item">-->
@@ -35,9 +35,9 @@
 <!--              </div>-->
 <!--              {:token_field('__token__')}-->
 <!--              <div class="layui-form-item">-->
-<!--                <input type="hidden" name="id" value="{:cookie('mid')}">-->
-<!--                <input type="hidden" name="email" value="{:cookie('email')}">-->
-<!--                <input type="hidden" name="username" value="{:cookie('username')}">-->
+<!--                <input type="hidden" name="id" value="{:request()->cookie('mid')}">-->
+<!--                <input type="hidden" name="email" value="{:request()->cookie('email')}">-->
+<!--                <input type="hidden" name="username" value="{:request()->cookie('username')}">-->
 <!--                <button class="layui-btn" data-request="{:__u('login/regActive')}" lay-filter="*" lay-submit>提交</button>-->
 <!--              </div>-->
 <!--            </form>-->

@@ -1,10 +1,13 @@
 <?php
 
 return [
-    'dispatch_success_tmpl' => public_path().'/tpl/dispatch_jump.tpl',
-    'dispatch_error_tmpl' => public_path().'/tpl/dispatch_jump.tpl',
+    'dispatch_success_tmpl' => app_path().'common/tpl/dispatch_jump.tpl',
+    'dispatch_error_tmpl' => app_path().'/common/tpl/dispatch_jump.tpl',
     'captcha'=>[
         'check'=>true,
+    ],
+    'upload'=>[
+        'path'=>'/storage',
     ],
     'backend'=>[
         //不需要验证权限的控制器
@@ -21,7 +24,9 @@ return [
         'isDemo'=>0,
     ],
     'auth_on'=>true,
+
     'version'=>'1.0',
-    'layui_version' => '2.7.2'
+
+    'layui_version' => '2.7.6'
 ]
 ;

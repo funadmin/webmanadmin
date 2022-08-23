@@ -8,7 +8,7 @@
     include: [
         'css','treeGrid','tableSelect', 'treeTable','tableEdit','tableFilter',
         'tableTree','iconPicker','iconFonts', 'toastr','step-lay','inputTags' ,'cityPicker',
-        'timeago','multiSelect','xmSelect','selectPlus','selectN',
+        'timeago','multiSelect','xmSelect','selectPlus','selectN','selectPage',
         'regionCheckBox','timePicker','croppers', 'dayjs',
         'md5','fun','form','fu', 'table','upload'],
     paths: {
@@ -17,7 +17,7 @@
         //layui等组件
         'tableFilter'   : 'plugins/lay-module/tableFilter/tableFilter',
         // 'layui'         : 'plugins/layui/layui', // jquery
-        'treeGrid'      : 'plugins/lay-module/treeGrid/treeGrid',
+        'treeGrid'      : 'plugins/lay-module/treeGrid/treeGrid.min',
         'tableSelect'   : 'plugins/lay-module/tableSelect/tableSelect',
         'treeTable'     : 'plugins/lay-module/treeTable/treeTable',
         'tableEdit'     : 'plugins/lay-module/tableTree/tableEdit',
@@ -31,6 +31,7 @@
         'multiSelect'   : 'plugins/lay-module/multiSelect/multiSelect',
         'selectN'       : 'plugins/lay-module/selectPlus/selectN',
         'selectPlus'    : 'plugins/lay-module/selectPlus/selectPlus',
+        'selectPage'    : 'plugins/lay-module/selectPage/selectpage.min',
         'cityPicker'    : 'plugins/lay-module/cityPicker/city-picker',
         'regionCheckBox': 'plugins/lay-module/regionCheckBox/regionCheckBox',
         'timePicker'    : 'plugins/lay-module/timePicker/timePicker',
@@ -64,20 +65,8 @@
         'tableFilter':{
             deps: ['css!plugins/lay-module/tableFilter/tableFilter.css'],
         },
-        'inputTags':{
-            deps: ['css!plugins/lay-module/inputTags/inputTags.css'],
-        },
-        'regionCheckBox':{
-            deps: ['css!plugins/lay-module/regionCheckBox/regionCheckBox.css'],
-        },
-        'multiSelect': {
-            deps: ['css!plugins/lay-module/multiSelect/multiSelect.css'],
-        },
         'timePicker':{
             deps:['css!plugins/lay-module/timePicker/timePicker.css'],
-        },
-        'step': {
-            deps: ['css!plugins/lay-module/step/step.css'],
         },
         'croppers': {
             deps: [

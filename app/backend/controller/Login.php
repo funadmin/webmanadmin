@@ -18,8 +18,8 @@ use fun\helper\SignHelper;
 use support\Request;
 class Login extends Controller {
 
-    public function beforeAction(Request $request) {
-        parent::beforeAction($request);
+    public function __construct() {
+        parent::__construct();
     }
 
     public function index(){

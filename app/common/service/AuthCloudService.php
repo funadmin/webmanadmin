@@ -38,9 +38,9 @@ class AuthCloudService extends AbstractService
     public $options = [];
     public $header = [];
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
     }
 
     /**

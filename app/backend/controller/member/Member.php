@@ -26,9 +26,9 @@ class Member extends Controller
     protected $allowModifyFields = ['*'];
     protected $relationSearch = true;
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new MemberModel();
     }
 

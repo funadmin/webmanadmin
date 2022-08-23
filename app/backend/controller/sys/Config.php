@@ -31,9 +31,9 @@ use support\Request;
 class Config extends Controller {
 
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new ConfigModel();
     }
 
@@ -99,20 +99,18 @@ class Config extends Controller {
      */
     public function edit(){
         $id  = request()->get('id');
-        if(request()->isPost()){
-            $list = $this->modelClass->find($id);
-            if(empty($list)) return $this->error(lang('Data is not exist'));
-            if (request()->isPost()) {
-                $post = request()->post();
-                $rule = [];
-                $this->validate($post, $rule);
-                try {
-                    $save = $list->save($post);
-                } catch (\Exception $e) {
-                    return $this->error(lang('Save Failed'));
-                }
-                return $this->success(lang('Save Success')) ;
+        $list = $this->modelClass->find($id);
+        if(empty($list)) return $this->error(lang('Data is not exist'));
+        if (request()->isPost()) {
+            $post = request()->post();
+            $rule = [];
+            $this->validate($post, $rule);
+            try {
+                $save = $list->save($post);
+            } catch (\Exception $e) {
+                return $this->error(lang('Save Failed'));
             }
+            return $this->success(lang('Save Success')) ;
         }
         $list = $this->modelClass->find(request()->input('id'));
         $configGroup = ConfigGroupModel::select();

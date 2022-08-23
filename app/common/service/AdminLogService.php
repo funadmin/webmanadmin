@@ -19,18 +19,6 @@ use support\Request;
 class AdminLogService extends AbstractService
 {
     /**
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     * 保存记录
-     */
-
-    public function beforeAction(Request $request)
-    {
-        parent::beforeAction($request);
-
-    }
-    /**
      * @param $config
      */
     public function __construct($config=[])
@@ -64,6 +52,13 @@ class AdminLogService extends AbstractService
         return self::$_instance;
 
     }
+
+    /**
+     * @return void
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public function save()
     {
         list($app,$controller,$action,$route,$url) = getNodeInfo();

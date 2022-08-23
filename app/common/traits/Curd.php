@@ -11,33 +11,34 @@
  * Date: 2017/8/2
  */
 namespace app\common\traits;
+use app\backend\model\Admin;
 use app\common\annotation\NodeAnnotation;
+use app\common\model\Member;
 use fun\helper\TreeHelper;
 use think\facade\Cache;
 use think\facade\Db;
 use think\helper\Str;
 use think\model\concern\SoftDelete;
-use think\exception\ValidateException;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 /**
  * Trait Curd
  * @package common\traits
  */
 trait Curd
 {
-    use SoftDelete;
 
+
+    use SoftDelete;
     /**
      * @NodeAnnotation(title="List")
-     * @return \support\Response
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
+     * @return \think\response\Json|\think\response\View
      */
     public function index()
     {
         if (request()->isAjax()) {
             if (request()->input('selectFields')) {
-                return $this->selectList();
+                $this->selectList();
             }
             list($this->page, $this->pageSize,$sort,$where) = $this->buildParames();
             $list = $this->modelClass
@@ -48,6 +49,15 @@ trait Curd
                     'page' => $this->page,
                 ]);
             $result = ['code' => 0, 'msg' => lang('Get Data Success'), 'data' => $list->items(), 'count' =>$list->total()];
+//            $count = $this->modelClass
+//                ->where($where)
+//                ->count();
+//            $list = $this->modelClass
+//                ->where($where)
+//                ->order($sort)
+//                ->page($this->page,$this->pageSize)
+//                ->select();
+//            $result = ['code' => 0, 'msg' => lang('operation success'), 'data' => $list, 'count' => $count];
             return json($result);
         }
         return fetch();
@@ -55,7 +65,7 @@ trait Curd
 
     /**
      * @NodeAnnotation (title="add")
-     * @return \support\Response
+     * @return \think\response\View
      */
     public function add()
     {
@@ -69,8 +79,8 @@ trait Curd
             $rule = [];
             try {
                 $this->validate($post, $rule);
-            }catch (ValidateException $e){
-                $this->error(lang($e->getMessage()));
+            }catch (\ValidateException $e){
+                return $this->error(lang($e->getMessage()));
             }
             try {
                 $save = $this->modelClass->save($post);
@@ -83,24 +93,24 @@ trait Curd
             'formData' => '',
             'title' => lang('Add'),
         ];
-        return fetch('add',$view);
+        return fetch('',$view);
     }
 
     /**
      * @NodeAnnotation(title="edit")
-     * @return \support\Response
+     * @return \think\response\View
      */
     public function edit()
     {
         $id = request()->input('id');
         $list = $this->modelClass->find($id);
-        if(empty($list)) $this->error(lang('Data is not exist'));
+        if(empty($list)) return $this->error(lang('Data is not exist'));
         if (request()->isPost()) {
             $post = request()->post();
             $rule = [];
             try {
                 $this->validate($post, $rule);
-            }catch (ValidateException $e){
+            }catch (\ValidateException $e){
                 return $this->error(lang($e->getMessage()));
             }
             foreach ($post as $k=>$v){
@@ -120,12 +130,46 @@ trait Curd
     }
 
     /**
+     * @NodeAnnotation(title="copy")
+     * @return \Response|\support\Response|null
+     */
+    public function copy(){
+        $id = request()->input('id');
+        $list = $this->modelClass->find($id);
+        if(empty($list)) return $this->error(lang('Data is not exist'));
+        if (request()->isPost()) {
+            $post = request()->post();
+            $rule = [];
+            try {
+                $this->validate($post, $rule);
+            }catch (\ValidateException $e){
+                return $this->error(lang($e->getMessage()));
+            }
+            try {
+                $data = $list->toArray();
+                if(isset($data['create_time'])){
+                    unset($data['create_time']);
+                }
+                if(isset($data['update_time'])){
+                    unset($data['update_time']);
+                }
+                unset($data['id']);
+                $this->modelClass->save($data);
+            } catch (\Exception $e) {
+                return $this->error(lang($e->getMessage()));
+            }
+            return $this->success(lang('operation success'));
+        }
+        $view = ['formData'=>$list,'title' => lang('Add'),];
+        return fetch('add',$view);
+    }
+    /**
      * @NodeAnnotation(title="delete")
      */
     public function delete()
     {
         $ids =  request()->input('ids')?request()->input('ids'):request()->input('id');
-        if(empty($ids)) $this->error(lang('id is not exist'));
+        if(empty($ids)) return $this->error('id is not exist');
         if($ids=='all'){
             $list = $this->modelClass->withTrashed(true)->select();
         }else{
@@ -134,7 +178,7 @@ trait Curd
             }
             $list = $this->modelClass->withTrashed(true)->where($this->primaryKey,'in', $ids)->select();
         }
-        if(empty($list))$this->error(lang('Data is not exist'));
+        if(empty($list))return $this->error('Data is not exist');
         try {
             foreach ($list as $k=>$v){
                 $v->force()->delete();
@@ -150,9 +194,9 @@ trait Curd
     public function destroy()
     {
         $ids = request()->input('ids')?request()->input('ids'):request()->input('id');
-        if(empty($ids)) $this->error('id is not exist');
+        if(empty($ids)) return $this->error('id is not exist');
         $list = $this->modelClass->whereIn($this->primaryKey, $ids)->select();
-        if(empty($list)) $this->error('Data is not exist');
+        if(empty($list)) return $this->error('Data is not exist');
         try {
             foreach ($list as $k=>$v){
                 $v->delete();
@@ -165,28 +209,30 @@ trait Curd
 
     /**
      * @NodeAnnotation(title="sort")
-     * @input $id
+     * @param $id
      */
     public function sort($id)
     {
         $model = $this->findModel($id);
-        if(empty($model))$this->error(lang('Data is not exist'));
+        if(empty($model))return $this->error('Data is not exist');
         $sort = request()->input('sort');
         $save = $model->sort = $sort;
-        if($save) return $this->success(lang('operation success')) ;
-        return  $this->error(lang("operation failed"));
+        if($save){
+            return $this->success(lang('operation success'));
+        }
+        return $this->error(lang("operation failed"));
     }
 
     /**
      * @NodeAnnotation(title="modify")
      */
     public function modify(){
-        $id = request()->input('id');
-        $field = request()->input('field');
-        $value = request()->input('value');
+        $id = input('id');
+        $field = input('field');
+        $value = input('value');
         if($id){
             if($this->allowModifyFields != ['*'] && !in_array($field,$this->allowModifyFields)){
-                $this->error(lang('Field Is Not Allow Modify：' . $field));
+                return $this->error(lang('Field Is Not Allow Modify：' . $field));
             }
             $model = $this->findModel($id);
             if (!$model) {
@@ -198,7 +244,7 @@ trait Curd
             }catch(\Exception $e){
                 return $this->error(lang($e->getMessage()));
             }
-            return $this->success(lang('Modify success'));
+            return $this->success(lang('Modify success')) ;
         }else{
             return $this->error(lang('Invalid data'));
         }
@@ -206,7 +252,7 @@ trait Curd
 
     /**
      * @NodeAnnotation (title="Recycle")
-     * @return \support\Response
+     * @return \think\response\Json|\think\response\View
      */
     public function recycle()
     {
@@ -230,9 +276,9 @@ trait Curd
      */
     public function restore(){
         $ids = request()->input('ids')?request()->input('ids'):request()->input('id');
-        if(empty($ids)) $this->error('id is not exist');
+        if(empty($ids)) return $this->error('id is not exist');
         $list = $this->modelClass->onlyTrashed()->whereIn($this->primaryKey, $ids)->select();
-        if(empty($list)) $this->error('Data is not exist');
+        if(empty($list)) return $this->error('Data is not exist');
         try {
             foreach ($list as $k=>$v){
                 $v->restore();
@@ -249,13 +295,53 @@ trait Curd
      */
     public function import()
     {
-        $input = request()->all();
-        $res = 1;//此处省略
-        if($res){
-            return $this->success(lang('Oprate success'));
-        }else{
-            return $this->error(lang('Oprate failed'));
+        $file = request()->input('file');
+        $excelData = $this->getFileData($file);
+        $tableField = $this->getTableField();
+        try {
+            $excelData = array_filter($excelData);
+            $fieldTitle = array_filter($excelData[0]);
+            $data = [];
+            $tableComment =  array_values($tableField);
+            $tableFieldKey =  array_keys($tableField);
+            foreach ($excelData as $key => $value) {
+                if($key == 0) continue;
+                $one = [];
+                foreach ($value as $k=>$val) {
+                    if($k>count($fieldTitle)-1) unset($value[$k]);
+                }
+                $newValue = array_combine($fieldTitle,$value);
+                foreach ($newValue as $k=>$v){
+                    if ($k && in_array($k,$tableComment)) {
+                        $field = array_search($k,$tableField);
+                        if($field=='admin_id' && is_string($v)){
+                            $admin = Admin::where('username|realname',$v)->find();
+                            if($admin){
+                                $v = $admin->id;
+                            }else{
+                                $v = session('admin.id');
+                            }
+                        }
+                        if($field=='member_id' && is_string($v)){
+                            $admin = Member::where('username',$v)->find();
+                            if($admin){
+                                $v = $admin->id;
+                            }else{
+                                $v = session('member.id');
+                            }
+                        }
+                        $one[$field] = $v;
+
+                    }
+                }
+                if($one) $data[] = $one;
+            }
+            $this->modelClass->saveAll($data);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage());
         }
+        return $this->success(lang('Import successful'));
+
     }
 
     /**
@@ -263,7 +349,6 @@ trait Curd
      */
     public function export()
     {
-
         list($this->page, $this->pageSize,$sort,$where) = $this->buildParames();
         $tableName = $this->modelClass->getName();
         $tableName  = Str::snake($tableName);
@@ -288,22 +373,18 @@ trait Curd
         }
         $list = $this->modelClass->where($where)->order($sort)->select()->toArray();
         $tableChName =  $tableInfo[0]['Comment']? $tableInfo[0]['Comment']:$tableName;
-        $headTitle = $tableChName.'-'.date('Y-m-d H:i:s');
+        $headTitle = $tableChName.'-'.date('Y-m-d H:i:s');;
         $headTitle= "<tr style='height:50px;border-style:none;'><th border=\"0\" style='height:60px;font-size:22px;' colspan='".(count($headerArr))."' >{$headTitle}</th></tr>";
         $fileName = $tableChName.'-'.date('Y-m-d H:i:s').'.xlsx';
-        $param  = [
-            'headTitle'=>$headTitle,
-            'fileName'=>$fileName,
-            'list'=>$list,
-        ];
-//        $res = hook('exportExcel',$param);
-//        if($res){
-//            return $this->success(lang('export success'));
-//        }
-        $this->excelData($list,$headerArr,$headTitle,$fileName);
-        return $this->success(lang('export success'));
+        $response = response();
+        $str =  $this->excelData($list,$headerArr,$headTitle,$fileName);
+        $response->withHeaders([
+            'Content-Type' => 'application/vnd.ms-excel',
+            'Content-Disposition' => 'attachment;filename="xxx.xlsx"',
+            'Cache-Control' => 'max-age=0',
+        ])->withBody($str);
+        return $response;
     }
-
 
     /**
      * 返回模型
@@ -317,6 +398,63 @@ trait Curd
         return $model;
     }
 
+    /**
+     * 获取表格文件内容
+     * @param $file
+     * @return array|void
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     */
+    protected function getFileData($file=''){
+
+        $file = $file?: request()->input('file');
+        if (!$file) {
+            return $this->error(lang("Parameter error"));
+        }
+        $file = public_path(). $file;
+        //此处写导入逻辑
+        $file = iconv("utf-8", "gb2312", $file);
+        if (empty($file) || !file_exists($file)) {
+            return $this->error(lang('file does not exist'));
+        }
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        if (!in_array($ext, ['csv', 'xls', 'xlsx'])) {
+            return $this->error(lang('file  format not right'));
+        }
+        //实例化reader
+        if ($ext === 'csv') {
+            $reader = IOFactory::createReader('Csv')->setInputEncoding('GB2312');
+        } elseif ($ext === 'xls') {
+            $reader = IOFactory::createReader('Xls');
+        } else {
+            $reader = IOFactory::createReader('Xlsx');
+        }
+        if (!$PHPExcel = $reader->load($file)) {
+            return $this->error(lang('Unknown data format'));
+        }
+        $excelData = $PHPExcel->getSheet(0)->toArray();
+        $excelData = array_filter($excelData);
+        return $excelData;
+
+    }
+
+    /**
+     * @param $modelClass
+     * @return array
+     */
+    protected function getTableField($modelClass='',$field='COLUMN_NAME,COLUMN_COMMENT'){
+        $driver = config('thinkorm.default');
+        $this->modelClass = $modelClass?:$this->modelClass;
+        $database = $this->modelClass->get_databasename();
+        $table = $this->modelClass->getName();
+        $tablePrefix = $this->modelClass->get_table_prefix();
+        $sql = "select $field from information_schema . columns  where table_name = '" . $tablePrefix . $table . "' and table_schema = '" . $database . "'";
+        $tableField = Db::connect($driver)->query($sql);
+        $fieldArr = [];
+        foreach ($tableField as $field){
+            $fieldArr[$field['COLUMN_NAME']] = $field['COLUMN_COMMENT'];
+        }
+        return $fieldArr;
+    }
     /**
      * @param $data
      * @param $headerArr
@@ -345,7 +483,7 @@ trait Curd
         header( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
         header( "Pragma: no-cache" );
         header( "Expires: 0" );
-        exit( $str );
+        return $str;
     }
 
     /**
@@ -356,10 +494,13 @@ trait Curd
      */
     protected function selectList()
     {
-        $fields = request()->input('selectfields');
-        $tree = request()->input('tree');
+        if(input('selectFields') && input('showField')){
+            return $this->success('ok','',$this->selectpage());
+        }
+        $fields = input('selectFields');
+        $tree = input('tree');
         $field = $fields['name'].','.$fields['value'];
-        $parentField = request()->input('parentField');
+        $parentField = input('parentField');
         list($this->page, $this->pageSize,$sort,$where) = $this->buildParames();
         if($tree!='false' && $tree){
             $parentField = $parentField?:'pid';
@@ -377,7 +518,92 @@ trait Curd
         }
         return $this->success('','',$list);
     }
+    /**
+     *
+     * 当前方法只是一个比较通用的搜索匹配,请按需重载此方法来编写自己的搜索逻辑,$where按自己的需求写即可
+     * 这里示例了所有的参数，所以比较复杂，实现上自己实现只需简单的几行即可
+     *
+     */
+    protected function selectpage()
+    {
+        //设置过滤方法
+        //搜索关键词,客户端输入以空格分开,这里接收为数组
+        $word = (array) request()->input("q_word/a");
+        $word        = array_filter(array_unique($word));
+        $searchTable        = request()->input("searchTable/s");
+        $class = "\\app\\common\\model\\".Str::studly($searchTable);
+        if($searchTable && class_exists($class)) $this->modelClass = new $class;
+        //当前页
+        $page = request()->input("pageNumber",1);
+        //分页大小
+        $pagesize = request()->input("pageSize",10);
+        //搜索条件
+        $andor = request()->input("andOr", 'AND', "strtoupper");
+        //排序方式
+        $orderby = (array) request()->input("orderBy/a");
+        //显示的字段
+        $field = request()->input("showField");
+        //主键
+        $primarykey = request()->input("keyField");
+        //主键值
+        $primaryvalue = request()->input("keyValue");
+        //搜索字段
+        $searchfield = (array) request()->input("selectFields/a")  ;
+        //是否返回树形结构
+        $istree = request()->input("isTree", 0);
 
+        $ishtml = request()->input("isHtml", 0);
+        if ($istree) {
+            $word     = [];
+            $pagesize = 999999;
+        }
+        $order = [];
+        foreach ($orderby as $k => $v) {
+            if ($v == 'false') continue;
+            $order[$v[0]] = $v[1];
+        }
+        $where  = []; $whereOr  = [];
+        //如果有primaryvalue,说明当前是初始化传值
+        if ($primaryvalue !== null) {
+            $where[]    = [$primarykey ,'in', explode(',', $primaryvalue)];
+            $pagesize = 99999;
+        } else {
+            $logic       = $andor == 'AND' ? '&' : '|';
+            $searchfield = is_array($searchfield) ? implode($logic, $searchfield) : $searchfield;
+            $searchfield = str_replace(',', $logic, $searchfield);
+            foreach ($word as $key => $val)  {
+                array_push($whereOr,[[$searchfield,'LIKE','%'.$val.'%']]);
+            }
+        }
+        $fields = is_array($this->selectpageFields) ? $this->selectpageFields : ($this->selectpageFields && $this->selectpageFields != '*' ? explode(',', $this->selectpageFields) : []);
+        if (!empty($whereOr)){
+            $list = $this->modelClass->whereOr($whereOr)->field($fields)->order($order)->paginate(['list_rows'=> $pagesize, 'page' => $page,]);
+        }else{
+            $list = $this->modelClass->where($where)->field($fields)->order($order)->paginate(['list_rows'=> $pagesize, 'page' => $page]);
+        }
+        $field = $field ?: 'title';
+        if ($list->count() > 0) {
+            $list = $list->toArray();
+            foreach ($list['data'] as $index => &$item) {
+                unset($item['password'], $item['token']);
+                $item[$primarykey] = isset($item[$primarykey]) ? $item[$primarykey] : '';
+                $item[$field]      = isset($item[$field]) ? $item[$field] : '';
+                $item['pid'] = isset($item['pid']) ? $item['pid'] : (isset($item['parent_id']) ? $item['parent_id'] : 0);
+            }
+            if ($istree && !$primaryvalue) {
+                $list =TreeHelper::getTree($list, $field);
+                if (!$ishtml) {
+                    foreach ($list as &$item) {
+                        $item = str_replace('|--', ' ', $item);
+                    }
+                    unset($item);
+                }
+            }
+        }
+        $result = ['data' => $list['data'], 'count' =>$list['total']];
+        //这里一定要返回有list这个字段,total是可选的,如果total<=list的数量,则会隐藏分页按钮
+        return $result;
+    }
 
     /**
      * 组合参数
@@ -391,14 +617,14 @@ trait Curd
         header("content-type:text/html;charset=utf-8"); //设置编码
         $searchFields = is_null($searchFields) ? $this->searchFields : $searchFields;
         $relationSearch = is_null($relationSearch) ? $this->relationSearch : $relationSearch;
-        $search = request()->get("search", '');
-        $searchName = request()->get("searchName", $searchFields);
+        $search = request()->input("search", '');
+        $searchName = request()->input("searchName", $searchFields);
         $page = request()->input('page/d',1);
         $limit = request()->input('limit/d',15) ;
-        $filters = request()->get('filter','{}') ;
+        $filters = request()->input('filter','{}') ;
         $ops = request()->input('op','{}') ;
-        $sort = request()->get("sort", !empty($this->modelClass) && $this->modelClass->getPk() ? $this->modelClass->getPk() : 'id');
-        $order = request()->get("order", "DESC");
+        $sort = request()->input("sort", !empty($this->modelClass) && $this->modelClass->getPk() ? $this->modelClass->getPk() : 'id');
+        $order = request()->input("order", "DESC");
 //        $filters = htmlspecialchars_decode(iconv('GBK','utf-8',$filters));
         $filters = htmlspecialchars_decode($filters);
         $filters = json_decode($filters,true);

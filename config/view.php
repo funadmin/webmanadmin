@@ -21,7 +21,7 @@ return [
 //    'handler' => Raw::class
     'handler' => ThinkPHP::class,
     'options' => [
-        'debug' => false,
+        'debug' => true,
         'charset' => 'utf-8',
         'view_suffix' => 'html',
         'tpl_begin' => '{',

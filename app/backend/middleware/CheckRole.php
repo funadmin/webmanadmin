@@ -7,6 +7,7 @@
 namespace app\backend\middleware;
 
 use app\backend\service\AuthService;
+use Webman\Http\Request;
 use Webman\Http\Response;
 
 class CheckRole

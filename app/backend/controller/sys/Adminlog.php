@@ -25,9 +25,9 @@ use think\facade\Db;
  * @package app\backend\controller\sys
  */
 class Adminlog extends Controller {
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new LogModel();
 
     }

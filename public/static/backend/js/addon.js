@@ -123,8 +123,7 @@ define(['jquery', 'table', 'form', 'md5','upload'], function ($, Table, Form, Md
                 limit: 15,
                 page: false
             });
-            let table = $('#' + Table.init.table_elem);
-            Table.api.bindEvent(table);
+            Table.api.bindEvent(Table.init);
             layui.table.on('tool(' + Table.init.table_elem + ')', function (obj) {
                 var url = $(this).data('url'),auth = $(this).data('auth');
                 url = Fun.url(url);var event = obj.event;
@@ -184,7 +183,7 @@ define(['jquery', 'table', 'form', 'md5','upload'], function ($, Table, Form, Md
                                 })
                             },
                             btn2: function () {
-                                Fun.api.closeCurrentOpen();
+                                Fun.api.close();
                                 return false;
                             },
                             success: function (layero, index) {
@@ -291,7 +290,7 @@ define(['jquery', 'table', 'form', 'md5','upload'], function ($, Table, Form, Md
                                 })
                             },
                             btn2: function () {
-                                Fun.api.closeCurrentOpen();
+                                Fun.api.close();
                                 return false;
                             },
                             success: function (layero, index) {

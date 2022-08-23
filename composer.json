@@ -1,18 +1,18 @@
 {
-  "name": "funadmin/webadmin",
+  "name": "workerman/webman",
   "type": "project",
   "keywords": [
     "high performance",
     "http service"
   ],
-  "homepage": "http://www.funadmin.com",
-  "license": "apache-2.0",
+  "homepage": "http://www.workerman.net",
+  "license": "MIT",
   "description": "High performance HTTP Service Framework.",
   "authors": [
     {
-      "name": "funadmin",
-      "email": "994927909@qq.com",
-      "homepage": "http://www.funadmin.com",
+      "name": "walkor",
+      "email": "walkor@workerman.net",
+      "homepage": "http://www.workerman.net",
       "role": "Developer"
     }
   ],
@@ -25,7 +25,7 @@
   },
   "require": {
     "php": ">=7.2",
-    "workerman/webman-framework": "^1.3.14",
+    "workerman/webman-framework": "^1.4.3",
     "monolog/monolog": "^2.0",
     "psr/container": "1.1.1",
     "webman/think-orm": "^1.0",
@@ -37,35 +37,33 @@
     "gregwar/captcha": "1.*",
     "topthink/think-validate": "^2.0",
     "intervention/image": "^2.7",
-    "tinywan/jwt": "^1.3",
     "webman/console": "^1.0",
     "webman/gateway-worker": "^1.0",
-    "webman/auto-route": "^1.0",
     "webman/redis-queue": "^1.2",
     "symfony/translation": "^5.4",
     "doctrine/annotations": "^1.13",
     "topthink/think-helper": "^3.1",
     "topthink/think-image": "^1.0",
-    "webman/action-hook": "^1.0",
-    "webman/event": "^1.0"
+    "webman/event": "^1.0",
+    "phpoffice/phpspreadsheet": "^1.24"
+
   },
   "suggest": {
     "ext-event": "For better performance. "
   },
   "autoload": {
     "psr-4": {
-      "Foo\\Admin\\" : "vendor/foo/admin/src",
       "": "./",
       "App\\": "./app"
     },
-    "files": [
-      "./support/helpers.php",
-      "./extend/fun/helper.php",
-      "./extend/fun/form.php"
-    ],
     "psr-0" : {
       "": "extend/"
-    }
+    },
+    "files": [
+      "./support/helpers.php",
+      "./extend/fun/helper.php"
+    ]
+
   },
   "scripts": {
     "post-package-install": [

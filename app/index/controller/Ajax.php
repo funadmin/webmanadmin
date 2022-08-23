@@ -21,9 +21,9 @@ use support\Request;
 class Ajax extends Base
 {
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new Attach();
 
     }

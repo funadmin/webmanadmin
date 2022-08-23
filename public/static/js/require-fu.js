@@ -7,8 +7,8 @@
 // +----------------------------------------------------------------------
 // | Author: yuege <994927909@qq.com> Apache 2.0 License Code
 
-define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePicker', 'regionCheckBox','multiSelect', 'upload','selectN','selectPlus'
-], function($, xmSelect, iconPicker, cityPicker, inputTags, timePicker, regionCheckBox, multiSelect, Upload, selectN,selectPlus) {
+define(['jquery', 'selectPage','xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePicker', 'regionCheckBox','multiSelect', 'upload','selectN','selectPlus'
+], function($,selectPage, xmSelect, iconPicker, cityPicker, inputTags, timePicker, regionCheckBox, multiSelect, Upload, selectN,selectPlus) {
     var Fu = {
         init: {},
         events: {
@@ -17,14 +17,15 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                 if (list.length > 0) {
                     selectPlus = layui.selectPlus || parent.layui.selectPlus;
                     layui.each(list, function(i) {
-                        var id = $(this).prop('id'), name = $(this).attr('name') || 'id',
-                            url = $(this).data('url')|| $(this).data('request'),
-                            data = $(this).data('data')||　[], type = $(this).attr('multiple') || $(this).data('multiple') ?'checkbox':'radio',
-                            method = $(this).data('method')?$(this).data('method'):'get',
-                            values = $(this).data('value')?$(this).data('value'):'',
-                            attr = $(this).data('attr'), attr = typeof attr ==='string' ?attr.split(','):['id','title'],
-                            where = $(this).data('where'), delimiter = $(this).data('delimiter') || ',',
-                            fielddelimiter = $(this).data('fielddelimiter') || '、';
+                        var _that = $(this);
+                        var id =_that.prop('id'), name =_that.attr('name') || 'id',verify = _that.data('verify') || _that.attr('verify'),
+                            url =_that.data('url')||_that.data('request'),
+                            data =_that.data('data')||　[], type =_that.attr('multiple') ||_that.data('multiple') ?'checkbox':'radio',
+                            method =_that.data('method')?$(this).data('method'):'get',
+                            values =_that.data('value')?$(this).data('value'):'',
+                            attr =_that.data('attr'), attr = typeof attr ==='string' ?attr.split(','):['id','title'],
+                            where =_that.data('where'), delimiter =_that.data('delimiter') || ',',
+                            fielddelimiter =_that.data('fielddelimiter') || '、';
                         if(typeof values ==='string') {
                             values = values.split(',')
                         }else if(typeof values ==='number'){
@@ -33,7 +34,7 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                             options = {
                                 el: '#' + id, data:data, url: url, type: type,  name: name,
                                 field: attr, values: values, method: method, where: where,
-                                delimiter: delimiter, fielddelimiter: fielddelimiter,
+                                delimiter: delimiter, fielddelimiter: fielddelimiter,verify:verify,
                             };
                         selectplus[i] = selectPlus.render(options);
                     })
@@ -44,23 +45,69 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                 if (list.length > 0) {
                     selectN = layui.selectN || parent.layui.selectN;
                     layui.each(list, function(i) {
-                        var id = $(this).prop('id'), name = $(this).attr('name') || 'id',
-                            url = $(this).data('url') || $(this).data('request'),
-                            data = $(this).data('data')||　'',
-                            method = $(this).data('method')?$(this).data('method'):'get',
-                            last = $(this).data('last')?$(this).data('last'):'',
-                            values = $(this).data('value')?$(this).data('value'):'',
-                            search = $(this).data('search')?$(this).data('search'):'',
-                            attr = $(this).data('attr'), attr= typeof attr ==='string' ?attr.split(','):['id','title'],
-                            num = $(this).data('num')?$(this).data('num'):3,
-                            pid = $(this).data('pid') ||　'pid',
-                            delimiter = $(this).data('delimiter') || ',',
+                        var _that = $(this);
+                        var id = _that.prop('id'), name = _that.attr('name') || 'id',verify = _that.data('verify') || _that.attr('verify'),
+                            url = _that.data('url') || _that.data('request'),
+                            data = _that.data('data')||　'',
+                            method = _that.data('method')?_that.data('method'):'get',
+                            last = _that.data('last')?_that.data('last'):'',
+                            values = _that.data('value')?_that.data('value'):'',
+                            search = _that.data('search')?_that.data('search'):'',
+                            attr = _that.data('attr'), attr= typeof attr ==='string' ?attr.split(','):['id','title'],
+                            num = _that.data('num')?_that.data('num'):3,
+                            pid = _that.data('pid') ||　'pid',
+                            delimiter = _that.data('delimiter') || ',',
                             options = {
                                 elem: '#' + id, data: data, url: url, name: name,pid:pid,formFilter:id,
                                 field: attr, selected: values, method: method,search:search,num:num,
-                                delimiter: delimiter,last:last
+                                delimiter: delimiter,last:last,verify:verify,
                             };
                         selectn[i] =  selectN(options).render();
+                    })
+                }
+            },
+            selectpage:function() {
+                var list = $("*[lay-filter='selectPage']");
+                if (list.length > 0) {
+                    selectPage = layui.selectPage || parent.layui.selectPage;
+                    layui.each(list, function(i) {
+                        var _that = $(this);
+                        var id = _that.prop('id'), name = _that.attr('name') || 'id',verify = _that.data('verify') || _that.attr('verify'),
+                            url = _that.data('url') || _that.data('request'),
+                            data = _that.data('data'), field = _that.data('field') ||　'title',
+                            primaryKey = _that.data('primarkey') ||　'id', selectOnly = _that.data('selectonly') ||　false,
+                            pagination = !(_that.data('pagination') == 'false' || _that.data('pagination') == 0), listSize = _that.data('listsize') ||　'15',
+                            multiple = _that.data('multiple') ||　false, dropButton  = _that.data('dropbutton') ||　true,
+                            maxSelectLimit  = _that.data('maxselectlimit ') ||　0, searchField   = _that.data('searchfield') || field,
+                            searchKey =_that.data('searchkey') ||　primaryKey, orderBy    = _that.data('orderby') ||　false,
+                            method    = _that.data('method') ||　'GET', dbTable    = _that.data('dbtable'),
+                            selectToCloseList  =_that.data('selecttocloselist') ||　 false,disabled = _that.data('disabled') || false,
+                            andOr =_that.data('andor'),formatItem = _that.data('formatitem') || false,required = _that.data('required') || ''
+                            orderBy = layui.type(orderBy)=='string'?[orderBy]:orderBy;
+                            options = {
+                                showField : field, keyField :primaryKey,
+                                selectFileds:searchField,searchKey:searchKey,
+                                data : data || Fun.url(url), dbTable : dbTable, andOr : andOr, method:method,
+                                //仅选择模式，不允许输入查询关键字
+                                selectOnly : selectOnly,required : required, selectToCloseList:selectToCloseList,
+                                //关闭分页栏，数据将会一次性在列表中展示，上限200个项目
+                                pagination : pagination, maxSelectLimit : maxSelectLimit, orderBy : orderBy,
+                                //关闭分页的状态下，列表显示的项目个数，其它的项目以滚动条滚动方式展现（默认10个）
+                                listSize : listSize, multiple : multiple, dropButton : dropButton,
+                                formatItem : function(res){
+                                    if(formatItem)  return eval(formatItem);
+                                    return res[this.showField];
+                                },
+                                eSelect : function(res){},
+                                selectToCloseList:function(res){},
+                                eAjaxSuccess: function(res) {
+                                    row = res.data;data={};
+                                    data.list = typeof row.data !== 'undefined' ? row.data : [];
+                                    data.totalRow = typeof row.count !== 'undefined' ? row.count : row.data.length;
+                                    return data;
+                                }
+                            };_that.selectPage(options);
+                            if(disabled){_that.selectPageDisabled(true);}
                     })
                 }
             },
@@ -73,7 +120,7 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                             data = $(this).data('data')||　[], parentfield =  $(this).data('parentfield') || 'pid',
                             tips = $(this).data('tips') ||  '请选择', searchTips = $(this).data('searchtips') || '请选择',
                             empty = $(this).data('empty') || '呀,没有数据', height = $(this).data('height') || 'auto',
-                            paging = $(this).data('paging'), pageSize = $(this).data('pageSize'),
+                            paging = $(this).data('paging'), pageSize = $(this).data('pagesize'),
                             remoteMethod = $(this).data('remotemethod'), content = $(this).data('content') || '',
                             radio = $(this).data('radio'), disabled = $(this).data('disabled'),autoRow =  $(this).data('autorow') !== false,
                             clickClose = $(this).data('clickclose'), prop = $(this).data('prop') || $(this).data('attr'),
@@ -115,7 +162,6 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                                     value: val
                                 }
                             } : eval(create)?eval(create):false;
-                        console.log(value)
                         xmSelect = window.xmSelect ? window.xmSelect : parent.window.xmSelect;
                         options = {
                             el: '#' + id, language: lang, data: data, initValue: value, name: name,prop: props,
@@ -161,7 +207,6 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                         if (content) options.content = content;
                         xmselectobj[i] = xmSelect.render(options);
                         if(data.toString()==='' && url){
-                            console.log(url)
                             searchData = {selectFields:selelectFields,tree:tree.show,parentField:parentfield}
                             Fun.ajax({
                                 method:'GET',
@@ -192,22 +237,21 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                         var upload_url = Fun.url(Upload.init.requests.upload_url) + '?editor=tinymce&path=' + path
                         if ($(this).data('editor') == 2) {
                             if ($("body").find('script[src="/static/plugins/tinymce/tinymce.min.js"]').length == 0) {
-                                $('body').append($("<script src='/static/plugins/tinymce/tinymce.min.js'></script>"));
+                                $('body').append($("<script referrerpolicy='origin' src='/static/plugins/tinymce/tinymce.min.js'></script>"));
                             }
                             window['editor' + id] = tinymce.init({
                                 selector: '#' + id,
                                 language: 'zh-Hans',
                                 plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
-                                editimage_cors_hosts: ['picsum.photos'],
                                 menubar: 'file edit view insert format tools table help',
                                 toolbar: 'undo redo  bold italic underline strikethrough  fontfamily fontsize | blocks  alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  insertfile image media preview  template link  | print  anchor codesample save  ltr rtl ',
-                                toolbar_sticky: true,
+                                toolbar_sticky: false,
                                 toolbar_sticky_offset: isSmallScreen ? 102 : 108,
                                 autosave_ask_before_unload: true,
-                                autosave_interval: '30s',
+                                autosave_interval: '3s',
                                 autosave_prefix: '{path}{query}-{id}-',
                                 autosave_restore_when_empty: false,
-                                autosave_retention: '2m',
+                                autosave_retention: '20m',
                                 image_advtab: true,
                                 height: 650, //编辑器高度
                                 min_height: 400,
@@ -215,37 +259,41 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                                 fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px,128px',
                                 font_formats: '微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;',
                                 link_list: [
-                                    {title: 'My page 1', value: 'https://www.tiny.cloud'},
-                                    {title: 'My page 2', value: 'http://www.moxiecode.com'}
-                                ],
+                                {title: 'funadmin', value: 'https://www.tiny.cloud'},
+                                {title: 'my funadmin', value: 'http://www.funadmin.com'}],
                                 image_list: [
-                                    {title: 'My page 1', value: 'https://www.tiny.cloud'},
-                                    {title: 'My page 2', value: 'http://www.moxiecode.com'}
-                                ],
+                                {title: 'My page 1', value: 'https://www.tiny.cloud'},
+                                {title: 'my funadmin', value: 'http://www.funadmin.com'}],
                                 image_class_list: [
-                                    {title: 'None', value: ''},
-                                    {title: 'Some class', value: 'class-name'}
-                                ],
+                                {title: 'None', value: ''},
+                                {title: 'Some class', value: 'class-name'}],
+                                //动态改变值
+                                init_instance_callback: (editor) => {
+                                    editor.on('change', (e) => {
+                                        var val = editor.contentDocument.body.innerHTML;
+                                        $('textarea[name="' + name + '"]').val(val);
+                                    });
+                                },
                                 importcss_append: true,
                                 images_upload_url: upload_url,
                                 images_upload_base_path: '',
                                 templates: [
-                                    {
-                                        title: 'New Table',
-                                        description: 'creates a new table',
-                                        content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>'
-                                    },
-                                    {
-                                        title: 'Starting my story',
-                                        description: 'A cure for writers block',
-                                        content: 'Once upon a time...'
-                                    },
-                                    {
-                                        title: 'New list with dates',
-                                        description: 'New List with dates',
-                                        content: '<div class="mceTmpl"><span class="cdate">cdate</span><br><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>'
-                                    }
-                                ],
+                                {
+                                    title: 'New Table',
+                                    description: 'creates a new table',
+                                    content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>'
+                                },
+                                {
+                                    title: 'Starting my story',
+                                    description: 'A cure for writers block',
+                                    content: 'Once upon a time...'
+                                },
+                                {
+                                    title: 'New list with dates',
+                                    description: 'New List with dates',
+                                    content: '<div class="mceTmpl"><span class="cdate">cdate</span><br><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>'
+                                }
+                            ],
                                 template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
                                 template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
                                 image_caption: true,
@@ -257,48 +305,40 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                                 content_css: useDarkMode ? 'dark' : 'default',
                                 //自定义文件选择器的回调内容
                                 file_picker_callback: function (callback, value, meta) {
-                                    //文件分类
-                                    var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
-                                    //模拟出一个input用于添加本地文件
-                                    var input = document.createElement('input');
-                                    input.setAttribute('type', 'file');
-                                    input.setAttribute('accept', filetype);
-                                    input.click();
-                                    input.onchange = function () {
-                                        var file = this.files[0];
-                                        var xhr, formData;
-                                        xhr = new XMLHttpRequest();
-                                        xhr.withCredentials = false;
-                                        xhr.open('POST', upload_url);
-                                        xhr.onload = function () {
-                                            var json;
-                                            if (xhr.status != 200) {
-                                                failure('HTTP Error: ' + xhr.status);
-                                                return;
-                                            }
-                                            json = JSON.parse(xhr.responseText);
-                                            if (!json || typeof json.location != 'string') {
-                                                failure('Invalid JSON: ' + xhr.responseText);
-                                                return;
-                                            }
-                                            callback(json.location);
-                                        };
-                                        formData = new FormData();
-                                        formData.append('file', file, file.name);
-                                        xhr.send(formData);
-
+                                //文件分类
+                                var filetype = '.pdf, .txt, .zip, .rar, .7z, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .mp3, .mp4';
+                                //模拟出一个input用于添加本地文件
+                                var input = document.createElement('input');
+                                input.setAttribute('type', 'file');
+                                input.setAttribute('accept', filetype);
+                                input.click();
+                                input.onchange = function () {
+                                    var file = this.files[0];
+                                    var xhr, formData;
+                                    xhr = new XMLHttpRequest();
+                                    xhr.withCredentials = false;
+                                    xhr.open('POST', upload_url);
+                                    xhr.onload = function () {
+                                        var json;
+                                        if (xhr.status != 200) {
+                                            failure('HTTP Error: ' + xhr.status);
+                                            return;
+                                        }
+                                        json = JSON.parse(xhr.responseText);
+                                        if (!json || typeof json.location != 'string') {
+                                            failure('Invalid JSON: ' + xhr.responseText);
+                                            return;
+                                        }
+                                        callback(json.location);
                                     };
-                                },
+                                    formData = new FormData();
+                                    formData.append('file', file, file.name);
+                                    xhr.send(formData);
+
+                                };
+                            },
                             });
-                        }
-                        if ($(this).data('editor') == 3) {
-                            window['editor' + id] = layui.layedit.build(id, {
-                                height: 350,
-                                uploadImage: {
-                                    url: Fun.url(Upload.init.requests.upload_url) + '?editor=layedit&path=' + path,
-                                    type: 'post'
-                                }
-                            })
+
                         }
                     })
                 }
@@ -345,18 +385,18 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                 var list = $("*[lay-filter='colorPicker']");
                 if (list.length > 0) {
                     layui.each(list, function() {
-                        var _that = $(this);
+                        var _that = $(this),name= _that.data('name'),format = _that.data('format') || 'hex';
                         var id = _that.prop('id');
                         var color = _that.prev('input').val();
                         layui.colorpicker.render({
                             elem: '#' + id,
                             color: color,
                             predefine: true,
-                            colors: ['#F00', '#0F0', '#00F', 'rgb(255, 69, 0)', 'rgba(255, 69, 0, 0.5)'],
-                            size: 'lg',
+                            alpha: true,
+                            format:format,
                             change: function(color) {},
                             done: function(color) {
-                                _that.prev('input[type="hidden"]').val(color)
+                                _that.prev('input[name="' + name + '"]').val(color)
                             }
                         })
                     })
@@ -383,7 +423,6 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                                 _that.prev('input[type="hidden"]').val(getAllChecked())
                             },
                             change: function(result) {
-                                console.log(getAllChecked());
                                 _that.prev('input[name="'+name+'"]').val(getAllChecked())
                             }
                         });
@@ -575,6 +614,7 @@ define(['jquery', 'xmSelect', 'iconPicker', 'cityPicker', 'inputTags', 'timePick
                 events.addInput();
                 events.selectplus();
                 events.selectn();
+                events.selectpage();
                 events.removeInupt();
                 events.bindevent()
             }

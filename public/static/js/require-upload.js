@@ -37,15 +37,16 @@ define(["jquery", 'croppers'], function($, croppers) {
             },
         },
         api: {
-            mutiUpload: function() {
+            mutiUpload: function(ele,options,success,error,choose,progress) {
                 //多文件列表示例
-                var uploadList = $('*[lay-filter="multipleupload"]');
+                var uploadList = typeof ele === 'undefined' ?$('*[lay-filter="multipleupload"]'):ele;
+                var opt= [];
                 layui.each(uploadList, function(i, v) {
                     var uploadListView = $(this).parent('.layui-upload').find('.uploadList');
                     var id = $(this).attr('id');
                     var uploadListBtn = $(this).parent('.layui-upload').find('.uploadListBtn').attr('id');
                     var upload = layui.upload ? layui.upload : parent.layui.upload;
-                    uploadListIns = upload.render({
+                    opt[i] = $.extend({
                         elem: '#'+uploadListBtn,
                         url: Fun.url(Upload.init.requests.upload_url) //改成您自己的上传接口
                         , accept: 'file',
@@ -53,7 +54,7 @@ define(["jquery", 'croppers'], function($, croppers) {
                         multiple: true,
                         auto: false,
                         bindAction: '#'+id,
-                        choose: function(obj) {
+                        choose:choose===undefined? function(obj) {
                             var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
                             //读取本地文件
                             obj.preview(function(index, file, result) {
@@ -70,12 +71,12 @@ define(["jquery", 'croppers'], function($, croppers) {
                                 });
                                 uploadListView.append(tr);
                             });
-                        },
-                        progress: function(n, elem) {
+                        }:change,
+                        progress: progress===undefined?function(n, elem) {
                             var percent = n + '%'; //获取进度百分比
                             $('.progress').html(percent); //可配合 layui 进度条元素使用
-                        },
-                        done: function(res, index, upload) {
+                        }:progress,
+                        done: success===undefined?function(res, index, upload) {
                             if (res.code > 0) { //上传成功
                                 var tr = uploadListView.find('tr#upload-' + index),
                                     tds = tr.children();
@@ -89,59 +90,54 @@ define(["jquery", 'croppers'], function($, croppers) {
                                 return delete this.files[index]; //删除文件队列已经上传成功的文件
                             }
                             this.error(index, upload, res);
-                        },
-                        error: function(index, upload, res) {
+                        }:success,
+                        error: error===undefined?function(index, upload, res) {
                             var tr = uploadListView.find('tr#upload-' + index),
                                 tds = tr.children();
                             tds.eq(3).html('<span style="color: #FF5722;">上传失败(' + __(res.msg) + ')</span>');
                             tds.eq(4).find('.demo-reload').removeClass('layui-hide'); //显示重传
-                        }
-                    });
+                        }:error
+                    },options==undefined?{}:options)
+                    uploadListIns = upload.render(opt[i]);
 
                 })
             },
-            uploads: function() {
-                var uploadList = $('*[lay-filter="upload"]');
+            uploads: function(ele,options,success,error) {
+                var uploadList = typeof ele === 'undefined' ? $('*[lay-filter="upload"]') : ele;
                 if (uploadList.length > 0) {
+                    var opt= [];
                     layui.each(uploadList, function(i, v) {
                         //普通图片上传
                         var data = $(this).data();
                         if(typeof data.value == 'object') data = data.value;
-                        var uploadNum = data.num,
-                            uploadMime = data.mime;
-                        var uploadAccept = data.accept,
-                            uploadPath = data.path || 'upload',
-                            uploadSize = data.size,
-                            uploadmultiple = data.multiple,
-                            uploadExts = data.exts;
-                        uploadNum = uploadNum || 1;
-                        uploadSize = uploadSize || Upload.init.upload_size;
-                        uploadExts = uploadExts || Upload.init.upload_exts;
+                        var uploadNum = data.num, uploadMime = data.mime,uploadAccept = data.accept,uploadPath = data.path || 'upload',
+                            uploadSize = data.size,save = data.save || 0,group = data.group || '', uploadmultiple = data.multiple,
+                            uploadExts = data.exts;uploadNum = uploadNum || 1;uploadSize = uploadSize || Upload.init.upload_size;
+                            uploadExts = uploadExts || Upload.init.upload_exts;
                         uploadExts = uploadExts.indexOf(',') ?uploadExts.replace(/,/g,'|'):uploadExts
                         uploadmultiple = uploadmultiple || false;
-                        uploadAccept = uploadAccept || uploadMime;
+                        uploadAccept = uploadAccept || uploadMime || "*";
                         uploadAccept = uploadAccept ==='*' ?'file':uploadAccept;
-                        var _parent = $(this).parents('.layui-upload')
-                        var input = _parent.find('input[type="text"]');
-                        var options = {}
-                        options = {
-                            elem: this,
+                        var _parent = $(this).parents('.layui-upload'),input = _parent.find('input[type="text"]'),index;
+                        opt[i] = $.extend({
+                            elem: $(this),
                             accept: uploadAccept,
                             size: uploadSize,
                             number:uploadNum,
                             multiple: uploadmultiple,
-                            url: Fun.url(Upload.init.requests.upload_url) + '?path=' + uploadPath,
+                            url: Fun.url(Upload.init.requests.upload_url) + '?path=' + uploadPath+'&save='+save+'$group_id='+group,
                             before: function(obj) {
-                                var index = Fun.toastr.loading(__('uploading...'))
+                                index = Fun.toastr.loading(__('uploading'),setTimeout(function(){
+                                    Fun.toastr.close();
+                                },1200))
                             },
-                            done: function(res) {
+                            done: success===undefined?function(res) {
                                 if (res.code > 0) {
                                     var img ='jpg|jpeg|png|gif|svg|bmp|webp';
                                     var video ='mp4|rmvb|avi|ts';
                                     var zip ='jpg|jpeg|png|gif|';
                                     var audio ='mp3|wma|wav';
                                     var office ='ppt|pptx|xls|xlsx|word|ppt|pptx|doc|docx';
-                                    console.log(res)
                                     var start = res.url.lastIndexOf(".");
                                     uploadAccept =  res.url.substring(start+1, res.url.length).toLowerCase();
                                     if (img.indexOf(uploadAccept) !==-1) {
@@ -171,11 +167,7 @@ define(["jquery", 'croppers'], function($, croppers) {
                                         input.val(val_temp);
                                     } else {
                                         if (_parent.find('li').length >= uploadNum) {
-                                            Fun.toastr.error(__('File nums is limited'), function() {
-                                                setTimeout(function() {
-                                                    Fun.toastr.close();
-                                                }, 2000)
-                                            })
+                                            Fun.toastr.error(__('File nums is limited'))
                                             return false;
                                         } else {
                                             _parent.find('.layui-upload-list').append(html)
@@ -187,42 +179,29 @@ define(["jquery", 'croppers'], function($, croppers) {
                                             input.val(val_temp);
                                         }
                                     }
-                                    Fun.toastr.success(__('Upload Success'), function() {
-                                        setTimeout(function() {
-                                            Fun.toastr.close();
-                                        }, 2000)
-                                    })
+                                    Fun.toastr.success(__('Upload Success'))
                                 } else {
-                                    Fun.toastr.error(__('Upload Failed') + __(res.msg), function() {
-                                        setTimeout(function() {
-                                            Fun.toastr.close();
-                                        }, 2000)
-                                    })
+                                    Fun.toastr.error(__('Upload Failed') + __(res.msg))
                                 }
-                                Fun.toastr.close(index);
-                            },
-                            error: function() {
-                                Fun.toastr.error(__('Upload Failed'), function() {
-                                    setTimeout(function() {
-                                        Fun.toastr.close();
-                                    }, 2000)
-                                })
-                                Fun.toastr.close();
-                            }
-                        }
+                            }:success,
+                            error:error===undefined? function() {
+                                Fun.toastr.error(__('Upload Failed'))
+                            }:error,
+                        },options==undefined?{}:options)
                         if(uploadExts!=="*" && uploadExts){
-                            options.exts = uploadExts
+                            opt[i]['exts'] = uploadExts
                         }
-                        var uploadInt = layui.upload.render(options);
-                        Toastr.destroyAll();
+                        uploadInt = [];
+                        uploadInt[i] = layui.upload.render(opt[i]);
+                        // Toastr.destroyAll();
 
                     })
                 }
             },
-            cropper: function() {
-                var cropperlist = $("*[lay-filter='cropper']");
+            cropper: function(ele,options,success,error) {
+                var cropperlist = typeof ele === 'undefined' ? $('*[lay-filter="cropper"]') : ele;
                 if (cropperlist.length > 0) {
-                    cropperlistobj = {}
+                    var cropperlistobj = {}, opt = [];
                     layui.each(cropperlist, function(i) {
                         //创建一个头像上传组件
                         var _parent = $(this).parents('.layui-upload'), id = $(this).prop('id');
@@ -234,7 +213,7 @@ define(["jquery", 'croppers'], function($, croppers) {
                         saveH = saveH || 300;
                         mark = mark || 1;
                         area = area || '720px';
-                        cropperlistobj[i] = layui.croppers.render({
+                        opt[i] = $.extend({
                             elem: '#' + id,
                             saveW: saveW, //保存宽度
                             saveH: saveH, //保存高度
@@ -242,7 +221,7 @@ define(["jquery", 'croppers'], function($, croppers) {
                             area: area, //弹窗宽度
                             url: Fun.url(Upload.init.requests.upload_url) + '?path=' + uploadPath //图片上传接口返回和（layui 的upload 模块）返回的JOSN一样
                             ,
-                            done: function(res) {
+                            done:success=== undefined ? function(res) {
                                 //上传完毕回调
                                 if (res.code > 0) {
                                     Fun.toastr.success(res.msg);
@@ -252,8 +231,12 @@ define(["jquery", 'croppers'], function($, croppers) {
                                 } else if (res.code <= 0) {
                                     Fun.toastr.error(res.msg);
                                 }
-                            }
-                        });
+                            }:success,
+                            error: error === undefined ? function (index){
+
+                            }:error,
+                        },options===undefined?{}:options)
+                        cropperlistobj[i] = layui.croppers.render(opt[i]);
                     })
                 }
             },

@@ -520,7 +520,7 @@ class AuthService
     /**
      * 获取所有子id
      */
-    protected function getallIdsBypid($pid)
+    public function getallIdsBypid($pid)
     {
         $res = AuthRule::where('pid', $pid)->where('status', 1)->select();
         $str = '';

@@ -26,9 +26,9 @@ use think\facade\Cache;
 
 class Ajax extends Controller
 {
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new AttachModel();
     }
 
@@ -58,7 +58,7 @@ class Ajax extends Controller
     {
         $request = request();
         $cate = AuthRule::where('menu_status', 1)->order('sort asc')->select()->toArray();
-        $menulsit = (new AuthService($request))->menuhtml($cate);
+        $menulsit = (new AuthService())->menuhtml($cate);
         return $this->success('ok','',$menulsit);
     }
 

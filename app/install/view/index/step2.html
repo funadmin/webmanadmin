@@ -20,7 +20,7 @@
     <h1 class="install-h1">环境检测</h1>
     <?php if(is_file($config['lockFile'])):?>
     <div class="layui-error">
-        当前已经安装FunAdmin，如果需要重新安装，请手动移除FunAdmin/public/install.lock文件
+        当前已经安装funadmin-webman，如果需要重新安装，请手动移除FunAdmin/public/install.lock文件
     </div>
     <?php endif;;?>
     <!--系统环境信息-->
@@ -45,7 +45,7 @@
             <td><?php echo PHP_VERSION ?></td>
             <?php $php_version=explode('.', PHP_VERSION);?>
             <td>
-                <?php if(version_compare(PHP_VERSION, '7.2.0', '>')): ?>
+                <?php if(version_compare(PHP_VERSION, '7.4.0', '>')): ?>
                 <i class="layui-icon layui-icon-ok"></i>
                 <?php else: ?>
                 <i class="layui-icon layui-icon-close"></i>
@@ -274,8 +274,8 @@
         </tr>
     </table>
     <div class="btn-box">
-        <a class="layui-btn layui-btn-normal layui-btn-radius" href="{:url('index/step1')}">上一步</a>
-        <a class="layui-btn layui-btn-danger layui-btn-radius next" href="javascript:;" data-href="{:url('index/step3')}">下一步</a>
+        <a class="layui-btn layui-btn-danger layui-btn-radius" href="/install/index/step1">上一步</a>
+        <a class="layui-btn layui-btn-normal layui-btn-radius next" href="javascript:;" data-href="/install/index/step3">下一步</a>
     </div>
 </div>
 <script>

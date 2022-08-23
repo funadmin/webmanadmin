@@ -2,9 +2,9 @@
 
 namespace app\middleware;
 
-use app\backend\service\AuthService;
 use think\helper\Str;
 use support\View;
+use Webman\Http\Request;
 use Webman\Http\Response;
 
 class ViewNode

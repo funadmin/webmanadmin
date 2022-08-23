@@ -42,7 +42,7 @@ class Index extends Controller
         $languages = Db::name('languages')->cache(3600)->select();
         View::assign('menulist', $menulist);
         View::assign('languages', $languages);
-        return fetch('');
+        return fetch();
     }
 
     /**

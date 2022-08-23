@@ -23,9 +23,9 @@ use support\Request;
 class Blacklist extends Controller {
 
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new \app\common\model\Blacklist();
     }
 

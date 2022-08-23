@@ -31,11 +31,11 @@ class UploadService extends AbstractService
     protected $file;
 
     /**
-     * @param \support\Request $request
+     * @param \support\
      */
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->initialize();
     }
 
@@ -65,6 +65,7 @@ class UploadService extends AbstractService
         $path = request()->input('path', 'uploads');
         $group_id = request()->input('group_id', 1);
         $pathSrc = $path =='undefined'?'uploads':$path;
+        $uploadConfig = config('funadmin.upload');
         $editor = request()->input('editor', '');
         $save = request()->input('save', '');
         $files = request()->file();
@@ -83,9 +84,9 @@ class UploadService extends AbstractService
                     if (!$attach) {
                         try {
                             $file_ext = $file->getUploadExtension();
-                            $path = "/files/$pathSrc/".date('YmdHis')."/". md5(time()).'.' .$file_ext;
+                            $path = $uploadConfig['path']."/$pathSrc/".date('YmdHis')."/". md5(time()).'.' .$file_ext;
                             $file->move(public_path().$path);
-                            $paths = trim($path, "/");
+                            $paths = str_replace("\\",'/',trim($path, "/"));
                             $duration=0;
                             $file_name = basename($path);
                             $width = $height = 0;
@@ -174,9 +175,9 @@ class UploadService extends AbstractService
                 if (!$attach) {
                     try {
                         $file_ext = $file->getUploadExtension();
-                        $path = "/files/$pathSrc/".date('YmdHis')."/". md5(time()).'.' .$file_ext;
+                        $path = $uploadConfig['path']."/$pathSrc/".date('YmdHis')."/". md5(time()).'.' .$file_ext;
                         $file->move(public_path().$path);
-                        $paths = trim($path, "/");
+                        $paths = str_replace("\\",'/',trim($path, "/"));
                         $duration=0;
                         $file_name = basename($path);
                         $width = $height = 0;

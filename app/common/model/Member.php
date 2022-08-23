@@ -16,6 +16,7 @@ use app\common\validate\MemberValidate;
 use fun\helper\StringHelper;
 use think\exception\ValidateException;
 use think\facade\Db;
+use think\facade\Validate;
 use think\model\concern\SoftDelete;
 
 class  Member extends BaseModel{
@@ -88,7 +89,7 @@ class  Member extends BaseModel{
      * 注册
      */
     public function reg(){
-        Db::startlang();
+        Db::startTrans();
         try {
             $data = request()->post();
             $member = $this->where('email', $data['email'])->find();
@@ -96,8 +97,8 @@ class  Member extends BaseModel{
             if ($member && $member->status == 0) throw new \Exception('The account is disabled, please contact the management');
             if ($data['password'] != $data['repassword']) throw new \Exception('inconsistent passwords');
             try {
-                validate(MemberValidate::class)
-                    ->scene('Reg')
+                $validate = new MemberValidate();
+                $validate->scene('Reg')
                     ->check($data);
             } catch (ValidateException $e) {
                 throw new \Exception($e->getError());

@@ -22,9 +22,9 @@ use think\exception\ValidateException;
 class Login extends Base
 {
     protected $callback;
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new \app\common\model\Member();
         $this->initialize();
     }
@@ -133,7 +133,7 @@ class Login extends Base
             if (!$member)return $this->error('邮箱不存在');
             $code = mt_rand('100000', '999999');
             $time = 10 * 60;
-            $content = '亲爱的FunAdmin用户:' . $member->name . '<br>您正在重置密码，您的验证码为:' . $code . '，请在' . $time / 60 . '分钟内进行验证';
+            $content = '亲爱的FunAdmin用户:' . $member['name'] . '<br>您正在重置密码，您的验证码为:' . $code . '，请在' . $time / 60 . '分钟内进行验证';
             $param = ['to'=>$member->email,'subject'=>'FunAdmin重置密码邮件','content'=>$content];
             $mail = hook('sendEmail',$param);
             $mail = json_decode($mail,true);
@@ -162,9 +162,8 @@ class Login extends Base
             $data =  request()->post();
             //校验场景中重置密码的方法
             try {
-                validate(MemberValidate::class)
-                    ->scene('Repass')
-                    ->check($data);
+                $validate = new MemberValidate();
+                $validate->scene('Repass')->check($data);
             } catch (ValidateException $e) {
                 return $this->error($e->getError());
             }
@@ -188,6 +187,5 @@ class Login extends Base
             }
         }
     }
-
 
 }

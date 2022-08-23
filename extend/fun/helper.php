@@ -134,3 +134,446 @@ if (!function_exists('uninstallsql')) {
     }
 }
 
+
+
+
+
+
+
+
+// Form别名
+if (!class_exists('Form')) {
+    class_alias('fun\\Form', 'Form');
+}
+
+use fun\helper\FormHelper;
+
+if (!function_exists('form_token')) {
+    /**
+     * @param string $name
+     * @param string $type
+     * @param array $options
+     * @param '' $value
+     * @return string
+     */
+    function form_token($name = '__token__', $type = 'md5')
+    {
+        return (new FormHelper())->token($name , $type);
+    }
+}
+
+if (!function_exists('form_input')) {
+    /**
+     * @param string $name
+     * @param string $type
+     * @param array $options
+     * @param '' $value
+     * @return string
+     */
+    function form_input($name = '', $type = 'text', $options = [], $value = '')
+    {
+        return (new FormHelper())->input($name, $type, $options, $value);
+    }
+}
+
+if (!function_exists('form_text')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_text($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->text($name,$options, $value);
+    }
+}
+if (!function_exists('form_password')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_password($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->password($name,$options, $value);
+    }
+}
+if (!function_exists('form_hidden')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_hidden($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->hidden($name,$options, $value);
+    }
+}
+if (!function_exists('form_number')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_number($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->number($name,$options, $value);
+    }
+}
+if (!function_exists('form_range')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_range($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->range($name,$options, $value);
+    }
+}
+if (!function_exists('form_url')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_url($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->url($name,$options, $value);
+    }
+}
+if (!function_exists('form_tel')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_tel($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->tel($name,$options, $value);
+    }
+}
+
+
+if (!function_exists('form_email')) {
+    /**
+     * @param $name
+     * @param $options
+     * @param $value
+     * @return string
+     */
+    function form_email($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->email($name,$options, $value);
+    }
+}
+if (!function_exists('form_rate')) {
+    /**
+     * 评分
+     * @param string $name
+     * @param array $options
+     * @param '' $value
+     * @return string
+     */
+    function form_rate($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->rate($name, $options, $value);
+    }
+}
+
+if (!function_exists('form_slider')) {
+    /**
+     * 滑块
+     * @param string $name
+     * @param array $options
+     * @param '' $value
+     * @return string
+     */
+    function form_slider($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->slider($name, $options, $value);
+    }
+}
+if (!function_exists('form_radio')) {
+    /**
+     * @param '' $name
+     * @param '' $radiolist
+     * @param array $options
+     * @param string $value
+     * @return string
+     */
+    function form_radio($name = '', $radiolist = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->radio($name, $radiolist, $options, $value);
+    }
+}
+if (!function_exists('form_switchs')) {
+    /**
+     * @param $name
+     * @param $switch
+     * @param $option
+     * @param $value
+     * @return string
+     */
+    function form_switchs($name='', $switch = [], $option = [], $value = '')
+    {
+        return (new FormHelper())->switchs($name, $switch, $option, $value);
+    }
+}
+if (!function_exists('form_switch')) {
+    /**
+     * @param $name
+     * @param $switch
+     * @param $option
+     * @param $value
+     * @return string
+     */
+    function form_switch($name='', $switch = [], $option = [], $value = '')
+    {
+        return (new FormHelper())->switchs($name, $switch, $option, $value);
+    }
+}
+if (!function_exists('form_checkbox')) {
+    /**
+     * @param $name
+     * @return string
+     */
+    function form_checkbox($name ='', $list = [], $option = [], $value = '')
+    {
+        return (new FormHelper())->checkbox($name, $list, $option, $value);
+    }
+}
+
+if (!function_exists('form_arrays')) {
+    /**
+     * @param $name
+     * @return string
+     */
+    function form_arrays($name='', $list = [], $option = [])
+    {
+        return (new FormHelper())->arrays($name, $list, $option);
+    }
+}
+
+
+if (!function_exists('form_textarea')) {
+    /**
+     * @param $name
+     * @return string
+     */
+    function form_textarea($name = '', $option = [], $value = '')
+    {
+        return (new FormHelper())->textarea($name, $option, $value);
+    }
+}
+if (!function_exists('form_select')) {
+    /**
+     * @param '' $name
+     * @param array $options
+     * @return string
+     */
+    function form_select($name = '', $select = [], $options = [], $attr = '', $value = '')
+    {
+        if (!empty($attr) and !is_array($attr)) $attr = explode(',', $attr);
+        if (!empty($value) and !is_array($value)) $value = explode(',', $value);
+        return (new FormHelper())->multiselect($name, $select, $options, $attr, $value);
+    }
+}
+if (!function_exists('form_multiselect')) {
+    /**
+     * @param $name
+     * @param $select
+     * @param $options
+     * @param $attr
+     * @param $value
+     * @return string
+     */
+    function form_multiselect($name = '', $select = [], $options = [], $attr = '', $value = '')
+    {
+        if (!empty($attr) and !is_array($attr)) $attr = explode(',', $attr);
+        return (new FormHelper())->multiselect($name, $select, $options, $attr, $value);
+    }
+}
+if (!function_exists('form_selectplus')) {
+    /**
+     * @param $name
+     * @param $select
+     * @param $options
+     * @param $attr
+     * @param $value
+     * @return string
+     */
+    function form_selectplus($name = '', $select = [], $options = [], $attr = '', $value = '')
+    {
+        if (!empty($attr) and !is_array($attr)) $attr = explode(',', $attr);
+        return (new FormHelper())->selectplus($name, $select, $options, $attr, $value);
+    }
+}
+if (!function_exists('form_selectn')) {
+    /**
+     * @param $name
+     * @param $select
+     * @param $options
+     * @param $attr
+     * @param $value
+     * @return string
+     */
+    function form_selectn($name = '', $select = [], $options = [], $attr = '', $value = '')
+    {
+        if (!empty($attr) and !is_array($attr)) $attr = explode(',', $attr);
+        return (new FormHelper())->selectn($name, $select, $options, $attr, $value);
+    }
+}
+if (!function_exists('form_xmselect')) {
+    /**
+     * @param '' $name
+     * @param array $options
+     * @return string
+     */
+    function form_xmselect($name = '', $select = [], $options = [], $attr = '', $value = '')
+    {
+        if (!empty($attr) and is_array($attr)) $attr = implode(',', $attr);
+        return (new FormHelper())->xmselect($name, $select, $options, $attr, $value);
+    }
+}
+if (!function_exists('form_icon')) {
+    /**
+     * @param array $options
+     * @return string
+     */
+
+    function form_icon($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->icon($name, $options, $value);
+    }
+}
+
+if (!function_exists('form_date')) {
+    /**
+     * @param array $options
+     * @return string
+     */
+
+    function form_date($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->date($name, $options, $value);
+    }
+}
+
+if (!function_exists('form_city')) {
+    /**
+     * @param array $options
+     * @return string
+     */
+
+    function form_city($name = 'cityPicker', $options = [])
+    {
+        return (new FormHelper())->city($name, $options);
+    }
+}
+if (!function_exists('form_region')) {
+    /**
+     * @param array $options
+     * @return string
+     */
+
+    function form_region($name = 'regionCheck', $options = [])
+    {
+        return (new FormHelper())->region($name, $options);
+    }
+}
+if (!function_exists('form_tags')) {
+    /**
+     * @param array $options
+     * @return string
+     */
+
+    function form_tags($name = '', $options = [], $value = '')
+    {
+        $value = is_array($value) ? implode(',', $value) : $value;
+        return (new FormHelper())->tags($name, $options, $value);
+    }
+}
+if (!function_exists('form_color')) {
+    /**
+     * @param array $options
+     * @return string
+     */
+
+    function form_color($name = '', $options = [], $value = '')
+    {
+        return (new FormHelper())->color($name, $options, $value);
+    }
+}
+
+if (!function_exists('form_label')) {
+    /**
+     * @param bool $reset
+     * @param array $options
+     * @return string
+     */
+    function form_label($label = '', $options = [])
+    {
+        return (new FormHelper())->label($label, $options);
+    }
+}
+if (!function_exists('form_submitbtn')) {
+    /**
+     * @param bool $reset
+     * @param array $options
+     * @return string
+     */
+    function form_submitbtn($reset = true, $options = [])
+    {
+        return (new FormHelper())->submitbtn($reset, $options);
+    }
+}
+if (!function_exists('form_closebtn')) {
+    /**
+     * @param bool $reset
+     * @param array $options
+     * @return string
+     */
+    function form_closebtn($reset = true, $options = [])
+    {
+        return (new FormHelper())->closebtn($reset, $options);
+    }
+}
+if (!function_exists('form_upload')) {
+    /**
+     * @param $name
+     * @param '' $formdata
+     * @return string
+     */
+    function form_upload($name = '', $formdata = [], $options = [], $value = '')
+    {
+        return (new FormHelper())->upload($name, $formdata, $options, $value);
+    }
+}
+if (!function_exists('form_editor')) {
+    /**
+     * @param $name
+     * @return string
+     */
+    function form_editor($name = 'content', $type = 1, $options = [], $value = '')
+    {
+        return (new FormHelper())->editor($name, $type, $options, $value);
+    }
+}
+if (!function_exists('form_selectpage')) {
+    /**
+     * @param $name
+     * @return string
+     */
+    function form_selectpage($name = 'selectpage', $list = [], $options = [], $value=null)
+    {
+        return (new FormHelper())->selectpage($name, $list, $options, $value);
+    }
+}

@@ -16,7 +16,7 @@ return [
     'listen' => 'http://0.0.0.0:8787',
     'transport' => 'tcp',
     'context' => [],
-    'name' => 'funadmin-webman',
+    'name' => 'webman',
     'count' => cpu_count() * 2,
     'user' => '',
     'group' => '',

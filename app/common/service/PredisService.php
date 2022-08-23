@@ -22,9 +22,9 @@ class PredisService extends AbstractService
 
     static protected $instance;
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->initialize();
     }
 

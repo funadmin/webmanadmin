@@ -10,15 +10,11 @@ class BaseModel extends Model
     //表前缀
     public static function get_table_prefix(){
 
-        return Config::get('database.connections'.'.'.config('database.default').'.prefix');
+        return config('thinkorm.connections'.'.'.config('thinkorm.default').'.prefix');
     }
     //当前数据库
     public static function get_databasename(){
-        return Config::get('database.connections'.'.'.Config::get('database.default').'.database');
-    }
-    //当前数据库
-    public static function get_tablename(){
-        return Config::get('database.connections'.'.'.Config::get('database.default').'.database');
+        return config('thinkorm.connections'.'.'.config('thinkorm.default').'.database');
     }
 
     public static function get_addonstablename($tablename,$addon)

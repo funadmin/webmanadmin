@@ -17,9 +17,9 @@ use app\common\annotation\NodeAnnotation;
  */
 class AuthGroup extends Controller
 {
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
         $this->modelClass = new AuthGroupModel();
     }
 
@@ -218,7 +218,7 @@ class AuthGroup extends Controller
                         ->select()->toArray();
                 }
                 $request = request();
-                $list = (new AuthService($request))->authChecked($admin_rule, $pid = 0, $rules,$group_id);
+                $list = (new AuthService())->authChecked($admin_rule, $pid = 0, $rules,$group_id);
                 $view = [
                     'code'=>1,
                     'msg'=>'ok',
@@ -236,7 +236,7 @@ class AuthGroup extends Controller
                 }
                 $rules = json_decode($rules,true);
                 $request = request();
-                $rules = (new AuthService($request))->authNormal($rules);
+                $rules = (new AuthService())->authNormal($rules);
                 $rules = array_column($rules, 'id');
                 $rls = '';
                 $childIndexId='';

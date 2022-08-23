@@ -14,7 +14,7 @@
 
 return [
     '' => [
-        // ... 这里省略其它中间件
+    // ... 这里省略其它中间件 全局
         app\middleware\AccessControl::class,
         app\middleware\Lang::class,
         app\middleware\Install::class,
@@ -23,7 +23,6 @@ return [
     'backend' => [
         //角色权限
         app\backend\middleware\CheckRole::class,
-//        //节点
+//      //节点
         app\backend\middleware\SystemLog::class,
-    ],
-];
+    ],];

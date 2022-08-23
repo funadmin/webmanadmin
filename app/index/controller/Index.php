@@ -10,21 +10,27 @@
  * Author: yuege
  * Date: 2017/8/2
  */
+
 namespace app\index\controller;
+
 use app\common\controller\Controller;
 use app\common\model\Attach;
 use support\Request;
-class Index extends Base{
+
+class Index extends Base
+{
 
 
-    public function beforeAction(Request $request)
+    public function __construct()
     {
-        parent::beforeAction($request);
+        parent::__construct();
 
     }
-    public function index(){
 
-        return fetch('index/index');
+    public function index()
+    {
+
+        return fetch();
     }
 
 }
