@@ -22,6 +22,7 @@ class Index extends Controller
     protected $sqlFile = '';
     //mysql版本
     protected $mysqlVersion = '5.7';
+    protected $phpVersion = '7.2';
     //database模板
     protected $databaseTpl = '';
 
@@ -100,8 +101,8 @@ class Index extends Controller
                 return $this->error('当前版本已经安装了，如果需要重新安装请先删除install.lock');
             }
             //php 版本
-            if (version_compare(PHP_VERSION, '7.4.0', '<')) {
-                return $this->error('当前版本(" . PHP_VERSION . ")过低，请使用PHP7.4.0以上版本');
+            if (version_compare(PHP_VERSION, $this->phpVersion, '<')) {
+                return $this->error('当前版本(" . PHP_VERSION . ")过低，请使用PHP{$this->phpVersion}以上版本');
             }
             if (!extension_loaded("PDO")) {
                 return $this->error('当前未开启PDO，无法进行安装');
