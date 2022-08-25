@@ -28,16 +28,15 @@ class Token
     use Send;
 
     /**
-     * 构造方法
-     * @param Request $request Request对象
+     * @var string
      */
-    public function beforeAction(Request $request)
+    public function __construct()
     {
         header('Access-Control-Allow-Origin:*');
         header('Access-Control-Allow-Headers:Accept,Referer,Host,Keep-Alive,User-Agent,X-Requested-With,Cache-Control,Content-Type,Cookie,token');
         header('Access-Control-Allow-Credentials:true');
         header('Access-Control-Allow-Methods:GET, POST, PATCH, PUT, DELETE,OPTIONS');
-        $this->request = $request;
+        $this->request = request();
         $this->timeDif = config('api.timeDif')??$this->timeDif;
         $this->refreshExpires =config('api.timeDif')??$this->refreshExpires;
         $this->expires =config('api.timeDif')??$this->expires;
@@ -80,7 +79,7 @@ class Token
      */
     public function refresh()
     {
-        $refresh_token = Request::param('refresh_token');
+        $refresh_token = $this->request->post('refresh_token');
         $refresh_token_info = Db::name('oauth2_access_token')
             ->where('refresh_token',$refresh_token)
             ->where('tablename',$this->tableName)
@@ -155,7 +154,7 @@ class Token
         if($driver =='redis'){
             $accessTokenInfo['access_token'] = $this->buildAccessToken();
             $accessTokenInfo['refresh_token'] = $this->buildAccessToken();
-            $this->redis = PredisService::instance();
+            $this->redis = new PredisService();
             $this->redis->set(config('api.redisTokenKey').$this->appid. $this->tableName .  $accessTokenInfo['access_token'],serialize($accessTokenInfo),$this->expires);
             $this->redis->set(config('api.redisRefreshTokenKey') . $this->appid . $this->tableName . $accessTokenInfo['refresh_token'],serialize($accessTokenInfo),$this->refreshExpires);
         }else{

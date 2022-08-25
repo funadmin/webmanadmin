@@ -19,7 +19,6 @@ use Firebase\JWT\Key;
 use fun\auth\Send;
 use think\Exception;
 use think\facade\Db;
-use think\facade\Request;
 
 /**
  * API鉴权验证
@@ -77,7 +76,7 @@ class Oauth
     public  function getClient()
     {   
         //获取头部信息
-        $authorization = config('api.authentication')?config('api.authentication'):'authentication';
+        $authorization = config('api.authentication')?config('api.authentication'):'Authorization';
         $authorizationHeader = request()->header($authorization);
         if(!$authorizationHeader){
             throw new \Exception('Invalid authorization credentials');
