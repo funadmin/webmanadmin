@@ -104,6 +104,10 @@ class Index extends Controller
             if (version_compare(PHP_VERSION, $this->phpVersion, '<')) {
                 return $this->error('当前版本(" . PHP_VERSION . ")过低，请使用PHP{$this->phpVersion}以上版本');
             }
+            //mysql版本
+            if (version_compare($link->server_info, $this->mysqlVersion, '<')) {
+                return $this->error("MySQL数据库版本不能低于{$this->mysqlVersion},请将您的MySQL升级到{$this->mysqlVersion}及以上");
+            }
             if (!extension_loaded("PDO")) {
                 return $this->error('当前未开启PDO，无法进行安装');
             }
@@ -139,10 +143,7 @@ class Index extends Controller
             $link->query('set global wait_timeout=2147480');
             $link->query("set global interactive_timeout=2147480");
             $link->query("set global max_allowed_packet=104857600");
-            //版本
-            if (version_compare($link->server_info, $this->mysqlVersion, '<')) {
-                return $this->error("MySQL数据库版本不能低于{$this->mysqlVersion},请将您的MySQL升级到{$this->mysqlVersion}及以上");
-            }
+
             // 创建数据库并选中
             if (!$link->select_db($db['database'])) {
                 $create_sql = 'CREATE DATABASE IF NOT EXISTS ' . $db['database'] . ' DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;';
